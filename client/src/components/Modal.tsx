@@ -1,6 +1,6 @@
 import React from "react";
 
-function Modal() {
+const Modal = () => {
   return (
     <div>
       <div>
@@ -11,6 +11,6 @@ function Modal() {
       <div>BackDrop</div>
     </div>
   );
-}
+};
 
 export default Modal;

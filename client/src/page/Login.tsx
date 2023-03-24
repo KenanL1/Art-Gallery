@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../store";
 import { login } from "../store/Reducers/authSlice";
 
-function Login() {
+const Login = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -44,12 +44,17 @@ function Login() {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username</label>
+    <div className="flex flex-col justify-center">
+      <h1 className="font-extrabold text-[#222328] text-4xl text-center mt-8 mb-8">
+        Login
+      </h1>
+      <form className="w-full" onSubmit={handleSubmit}>
+        <div className="flex items-center gap-2 mb-2">
+          <label className="block text-sm font-medium text-gray-900">
+            Username
+          </label>
           <input
+            className="w-full border rounded-lg p-3"
             type="username"
             id="username"
             name="username"
@@ -59,9 +64,12 @@ function Login() {
           ></input>
         </div>
 
-        <div>
-          <label>Password</label>
+        <div className="flex items-center gap-2 mb-2">
+          <label className="block text-sm font-medium text-gray-900">
+            Password
+          </label>
           <input
+            className="w-full border rounded-lg p-3"
             type="password"
             id="password"
             name="password"
@@ -70,12 +78,23 @@ function Login() {
             required
           ></input>
         </div>
-        <button type="submit">Login</button>
+        <div className="flex items-center gap-2 mb-2">
+          <button
+            className="block mx-auto bg-blue-500 text-white py-2 px-4 rounded"
+            type="submit"
+          >
+            Login
+          </button>
+        </div>
       </form>
-
-      <Link to="/register">Register</Link>
+      <p>
+        Don't have an account?{" "}
+        <Link className="text-blue-500" to="/register">
+          Sign Up
+        </Link>
+      </p>
     </div>
   );
-}
+};
 
 export default Login;

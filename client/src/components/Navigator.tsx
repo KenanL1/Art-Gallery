@@ -3,7 +3,7 @@ import { logo } from "../assets";
 import { useAppSelector } from "../store";
 import { selectIsLoggedIn } from "../store/Reducers/authSlice";
 
-function Navigator() {
+const Navigator = () => {
   const isLoggedIn = useAppSelector(selectIsLoggedIn);
 
   return (
@@ -30,6 +30,6 @@ function Navigator() {
       </div>
     </header>
   );
-}
+};
 
 export default Navigator;
