@@ -9,7 +9,7 @@ import {
 } from "../store/Reducers/postSlice";
 
 const RenderCards = ({ data, title }: { data: CardType[]; title: string }) => {
-  if (data.length > 0) {
+  if (data && data.length > 0) {
     return (
       <div className="grid lg:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-3">
         {data.map((post) => (

@@ -40,19 +40,22 @@ router.route("/login").post(async (req, res) => {
         msg: `The username: ${req.body.username} is not associated with an account`,
       });
 
-    if (bcrypt.compare(req.body.password, user.password)) {
-      const token = issueJWT(user);
-      res.status(200).json({
-        success: true,
-        username: user.username,
-        token: token.token,
-        expiresIn: token.expires,
-      });
-    } else {
-      res
-        .status(401)
-        .json({ success: false, msg: "you entered the wrong password" });
-    }
+    bcrypt.compare(req.body.password, user.password, (err, data) => {
+      if (err) throw err;
+      if (data) {
+        const token = issueJWT(user);
+        res.status(200).json({
+          success: true,
+          username: user.username,
+          token: token.token,
+          expiresIn: token.expires,
+        });
+      } else {
+        res
+          .status(401)
+          .json({ success: false, msg: "you entered the wrong password" });
+      }
+    });
   } catch (err) {
     console.log(err);
   }

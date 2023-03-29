@@ -1,10 +1,66 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { logo } from "../assets";
-import { useAppSelector } from "../store";
-import { selectIsLoggedIn } from "../store/Reducers/authSlice";
+import { useAppSelector, useAppDispatch } from "../store";
+import {
+  selectIsLoggedIn,
+  selectUser,
+  logout,
+} from "../store/Reducers/authSlice";
 
 const Navigator = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const isLoggedIn = useAppSelector(selectIsLoggedIn);
+  const user = useAppSelector(selectUser);
+
+  const ProfileDropdown = () => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+
+    const toggleDropdown = () => {
+      setIsOpen(!isOpen);
+    };
+
+    const appLogout = () => {
+      dispatch(logout());
+      navigate("/");
+    };
+
+    const MenuItem = ({
+      name,
+      clickHandler,
+    }: {
+      name: String;
+      clickHandler: any;
+    }) => {
+      return (
+        <a
+          href="#"
+          className="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white"
+          onClick={clickHandler}
+        >
+          {name}
+        </a>
+      );
+    };
+
+    return (
+      <div className="relative inline-block">
+        <button
+          onClick={toggleDropdown}
+          className="px-4 py-2 rounded-md bg-green-700 text-white font-bold"
+        >
+          {user[0]}
+        </button>
+        {isOpen && (
+          <div className="absolute right-0 origin-top-right mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-10">
+            {/* Dropdown content */}
+            <MenuItem name="Logout" clickHandler={appLogout} />
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <header className="w-full flex justify-between items-center bg-white sm:px-8 px-4 py-4 border-b border-b-[$e6ebf4]">
@@ -13,12 +69,15 @@ const Navigator = () => {
       </Link>
       <div>
         {isLoggedIn ? (
-          <Link
-            to="/create"
-            className="font-inter font-medium bg-[#6469ff] text-white px-4 py-2 rounded-md"
-          >
-            Create
-          </Link>
+          <div className="">
+            <ProfileDropdown />
+            <Link
+              to="/create"
+              className="font-inter font-medium bg-[#6469ff] text-white px-4 py-2 rounded-md ml-3"
+            >
+              Create
+            </Link>
+          </div>
         ) : (
           <Link
             to="/login"

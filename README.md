@@ -16,7 +16,7 @@ By leveraging the **MERN stack (MongoDB, Express.js, React, Node.js)** to create
 
 ### Authentication
 
-By incorporating JWT (JSON Web Token) authentication using PassportJS, our web application benefits from a secure and flexible user authentication method that improves performance and scalability.
+By incorporating **JWT (JSON Web Token) authentication** using PassportJS, our web application benefits from a secure and flexible user authentication method that improves performance and scalability.
 
 Stateless authentication: JWT authentication is stateless, which means that the server does not need to store session information for each user. This makes it easier to scale applications and improves performance.
 

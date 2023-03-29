@@ -41,7 +41,7 @@ export const fetchPosts = createAsyncThunk("post/fetchPosts", async () => {
       return result.data.reverse();
     }
   } catch (err) {
-    alert(err);
+    console.error(err);
   }
   // finally {
   //   setLoading(false);
