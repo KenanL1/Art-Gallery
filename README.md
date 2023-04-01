@@ -4,6 +4,24 @@ The platform is designed for users to create, share and post AI-generated artwor
 
 Uses OpenAI and Stable Diffusion text-to-image API to generate unique images via text prompt
 
+## Setup
+
+This requires [Node.js](https://nodejs.org/)
+
+Install the dependencies and start the server
+
+```
+npm install
+npm start
+```
+
+Install the dependencies and start the client
+
+```
+npm install
+npm run dev
+```
+
 ### Tech Stack
 
 By leveraging the **MERN stack (MongoDB, Express.js, React, Node.js)** to create a **Single Page Application (SPA)**, developers can achieve a more engaging and seamless user experience. With dynamic content updates and reusable components, users can enjoy a faster and more responsive application that is easy to use and navigate.
@@ -23,3 +41,5 @@ Stateless authentication: JWT authentication is stateless, which means that the 
 Reduced server load: Because JWTs are self-contained, the server does not need to query a database or perform other expensive operations to authenticate each request. This reduces server load and improves performance.
 
 Improved security: JWTs are encrypted and signed, which makes them difficult to tamper with or forge. This helps to prevent unauthorized access and protects sensitive data.
+
+### Docker Container
