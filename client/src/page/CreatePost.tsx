@@ -5,7 +5,9 @@ import { preview } from "../assets";
 import { getRandomPrompt } from "../utils";
 import { FormField, Loader } from "../components";
 import { CardType } from "../components/Card";
-import { selectIsLoggedIn } from "../store/Reducers/authSlice";
+import { selectUser, selectUsername } from "../store/Reducers/authSlice";
+import { useAppSelector } from "../store";
+import { blobToBase64 } from "../utils";
 
 const CreatePost = () => {
   enum AIModel {
@@ -16,9 +18,11 @@ const CreatePost = () => {
   const navigate = useNavigate();
   const sizeOptions = [256, 512, 1024];
   const numImageOptions = [1, 2, 3, 4];
+  const username = useAppSelector(selectUsername);
 
   const [form, setForm] = useState<CardType>({
-    name: "",
+    _id: "",
+    name: username,
     prompt: "",
     photo: "",
     photo_id: "",
@@ -26,6 +30,7 @@ const CreatePost = () => {
     size: 512,
     steps: undefined,
     numImages: 1,
+    model: "",
   });
 
   const [generatingImg, setGeneratingImg] = useState<boolean>(false);
@@ -52,12 +57,13 @@ const CreatePost = () => {
         // n: form.numImages,
       };
     } else {
-      url = "https://khaki-beds-shout-35-240-225-214.loca.lt/text2img";
+      url =
+        "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5";
       body = {
-        prompt: form.prompt,
-        guidance_scale: form.guidance_scale,
-        steps: form.steps,
-        seed: -1,
+        inputs: form.prompt,
+        // guidance_scale: form.guidance_scale,
+        // steps: form.steps,
+        // seed: -1,
       };
     }
     if (form.prompt) {
@@ -66,29 +72,34 @@ const CreatePost = () => {
         const response = await fetch(url, {
           method: "POST",
           headers: {
+            Authorization: import.meta.env.VITE_HUGGINGFACE_KEY,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(body),
         });
 
-        const data = await response.json();
-        const img = model == AIModel.OpenAI ? data.photo : data.images[0];
-        setForm({ ...form, photo: `data:image/jpeg;base64,${img}` });
+        const data =
+          model == AIModel.OpenAI
+            ? await response.json()
+            : await response.blob();
+        const img =
+          model == AIModel.OpenAI
+            ? `data:image/jpeg;base64,${data.photo}`
+            : await blobToBase64(data);
+        setForm({ ...form, photo: img });
+        handleSubmit({ ...form, photo: img, model: model });
       } catch (err) {
         alert(err);
       } finally {
         setGeneratingImg(false);
-        handleSubmit(e as React.FormEvent<HTMLFormElement>);
       }
     } else {
       alert("Please provide proper prompt");
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (form.prompt && form.photo) {
+  const handleSubmit = async (_form: CardType) => {
+    if (_form.prompt && _form.photo) {
       setLoading(true);
       try {
         const response = await fetch("http://localhost:5000/api/v1/post", {
@@ -96,7 +107,7 @@ const CreatePost = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ ...form }),
+          body: JSON.stringify({ ..._form }),
         });
 
         await response.json();
@@ -107,23 +118,20 @@ const CreatePost = () => {
       } finally {
         setLoading(false);
       }
-    } else {
-      alert("Please generate an image with proper details");
     }
   };
 
   return (
     <section className="flex justify-center mx-auto">
-      <form className="mt-16" onSubmit={handleSubmit}>
+      <form className="mt-16">
         <div className="flex flex-col gap-5">
-          <FormField
+          {/* <FormField
             labelName="Your Name"
             type="text"
             name="name"
-            placeholder="Ex., john doe"
-            value={form.name}
+            value={username}
             handleChange={handleChange}
-          />
+          /> */}
           <select
             className="flex flex-col gap-5"
             name="selectModel"

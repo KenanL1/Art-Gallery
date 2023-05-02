@@ -9,6 +9,9 @@ import connectDB from "./models/connect.js";
 import postRoutes from "./routes/postRoutes.js";
 import dalleRoutes from "./routes/dalleRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import followerRoutes from "./routes/followerRoutes.js";
+import likeRoutes from "./routes/likeRoutes.js";
 
 // Gives us access to variables set in the .env file via `process.env.VARIABLE_NAME` syntax
 dotenv.config();
@@ -35,6 +38,9 @@ app.use(passport.initialize());
 // -----------------Routes----------------------
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/post", postRoutes);
+app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/users", followerRoutes);
+app.use("/api/v1/likes", likeRoutes);
 
 // Can only create when authenticated
 app.use(

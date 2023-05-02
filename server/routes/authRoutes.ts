@@ -1,23 +1,30 @@
 import express from "express";
 import bcrypt from "bcrypt";
+import Auth from "../models/auth.js";
 import User from "../models/user.js";
 import { issueJWT } from "../authentication/utils.js";
 
 const router = express.Router();
 
+// Create a new user
 router.route("/register").post(async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.body.username });
+    const user = await Auth.findOne({ username: req.body.username });
     if (user)
       res.status(400).json({
         message: `Account with username ${user.username} already exist`,
       });
     else {
       const hashPassword = await bcrypt.hash(req.body.password, 10);
-      const newUser = await User.create({
+      const newProfile = await User.create({
+        username: req.body.username,
+      });
+      newProfile.save();
+      const newUser = await Auth.create({
         name: req.body.name,
         username: req.body.username,
         password: hashPassword,
+        profile: newProfile._id,
       });
       newUser.save();
       res.status(200).json({
@@ -30,10 +37,12 @@ router.route("/register").post(async (req, res) => {
   }
 });
 
+// Authenticate and validate user
 router.route("/login").post(async (req, res) => {
   try {
-    console.log(req.body);
-    const user = await User.findOne({ username: req.body.username });
+    const user = await Auth.findOne({ username: req.body.username }).populate(
+      "profile"
+    );
     if (!user)
       return res.status(401).json({
         success: false,
@@ -46,6 +55,7 @@ router.route("/login").post(async (req, res) => {
         const token = issueJWT(user);
         res.status(200).json({
           success: true,
+          user: user.profile._id,
           username: user.username,
           token: token.token,
           expiresIn: token.expires,

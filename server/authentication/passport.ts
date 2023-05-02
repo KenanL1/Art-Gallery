@@ -3,7 +3,7 @@ import jwt from "passport-jwt";
 import bcrypt from "bcrypt";
 import path from "path";
 import fs from "fs";
-import User from "../models/user.js";
+import User from "../models/auth.js";
 
 const JwtStrategy = jwt.Strategy;
 const ExtractJwt = jwt.ExtractJwt;

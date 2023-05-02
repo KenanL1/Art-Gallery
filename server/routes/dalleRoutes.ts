@@ -12,11 +12,7 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-// router.route('/').get((req: express.Request, res: express.Response) => {
-//   res.status(200).json({ message: 'Hello from DALL-E!' });
-// });
-
-// Call OpenAI Text-to-Image API
+// Call OpenAI Text-to-Image API to generate an image
 router.route("/").post(async (req: express.Request, res: express.Response) => {
   try {
     const { prompt } = req.body;

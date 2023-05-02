@@ -5,7 +5,7 @@ interface Form {
   type: string;
   name: string;
   placeholder?: string;
-  value: string | number | undefined;
+  value: any;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isSurpriseMe?: boolean;
   handleSurpriseMe?: () => void;

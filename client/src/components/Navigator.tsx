@@ -5,6 +5,7 @@ import { useAppSelector, useAppDispatch } from "../store";
 import {
   selectIsLoggedIn,
   selectUser,
+  selectUsername,
   logout,
 } from "../store/Reducers/authSlice";
 
@@ -13,6 +14,7 @@ const Navigator = () => {
   const navigate = useNavigate();
   const isLoggedIn = useAppSelector(selectIsLoggedIn);
   const user = useAppSelector(selectUser);
+  const username = useAppSelector(selectUsername);
 
   const ProfileDropdown = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -26,6 +28,10 @@ const Navigator = () => {
       navigate("/");
     };
 
+    const goToProfile = () => {
+      navigate(`/profile/${user}`);
+    };
+
     const MenuItem = ({
       name,
       clickHandler,
@@ -34,13 +40,12 @@ const Navigator = () => {
       clickHandler: any;
     }) => {
       return (
-        <a
-          href="#"
-          className="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white"
+        <button
+          className="block px-4 py-2 w-full text-gray-800 hover:bg-blue-500 hover:text-white"
           onClick={clickHandler}
         >
           {name}
-        </a>
+        </button>
       );
     };
 
@@ -50,11 +55,12 @@ const Navigator = () => {
           onClick={toggleDropdown}
           className="px-4 py-2 rounded-md bg-green-700 text-white font-bold"
         >
-          {user[0]}
+          {username && username[0]}
         </button>
         {isOpen && (
           <div className="absolute right-0 origin-top-right mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-10">
             {/* Dropdown content */}
+            <MenuItem name="Profile" clickHandler={goToProfile} />
             <MenuItem name="Logout" clickHandler={appLogout} />
           </div>
         )}
@@ -63,7 +69,7 @@ const Navigator = () => {
   };
 
   return (
-    <header className="w-full flex justify-between items-center bg-white sm:px-8 px-4 py-4 border-b border-b-[$e6ebf4]">
+    <header className="w-full flex justify-between items-center bg-white py-1 border-b border-b-[$e6ebf4]">
       <Link to="/">
         <img src={logo} alt="logo" className="w-28 object-contain" />
       </Link>
