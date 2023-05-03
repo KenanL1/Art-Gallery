@@ -10,6 +10,7 @@ const Post = new mongoose.Schema(
     name: { type: String, required: true },
     prompt: { type: String, required: true },
     photo: { type: String, required: true },
+    photo_id: { type: String },
     likes: { type: Number, default: 0 },
     model: { type: String },
     guidance_scale: { type: Number },

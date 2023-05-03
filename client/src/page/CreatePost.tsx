@@ -35,7 +35,7 @@ const CreatePost = () => {
 
   const [generatingImg, setGeneratingImg] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [model, setModel] = useState<AIModel>(AIModel.OpenAI);
+  const [model, setModel] = useState<AIModel>(AIModel.SD);
   const [size, setSize] = useState<number>(512);
   const [numImages, setNumImages] = useState<number>(1);
 
@@ -152,7 +152,7 @@ const CreatePost = () => {
             isSurpriseMe
             handleSurpriseMe={handleSurpriseMe}
           />
-          <div className="flex flex-row gap-5 mb-2 justify-between">
+          {/* <div className="flex flex-row gap-5 mb-2 justify-between">
             <div className="flex flex-row gap-5 mb-2">
               <label
                 htmlFor="size"
@@ -189,8 +189,8 @@ const CreatePost = () => {
                 ))}
               </select>
             </div>
-          </div>
-          {model == AIModel.SD ? (
+          </div> */}
+          {/* {model == AIModel.SD ? (
             <div>
               <FormField
                 labelName="Guidance Scale"
@@ -223,7 +223,7 @@ const CreatePost = () => {
             </div>
           ) : (
             <></>
-          )}
+          )} */}
           <div className="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-64 p-3 h-64 flex justify-center items-center">
             {form.photo ? (
               <img

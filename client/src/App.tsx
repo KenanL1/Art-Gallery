@@ -38,7 +38,7 @@ const App = () => {
         </Routes>
       </main>
       <footer className="w-full flex justify-between items-center bg-white py-4 border-t border-t-[$e6ebf4]">
-        2023
+        @Mar 2023 - Apr 2023
       </footer>
     </Router>
   );

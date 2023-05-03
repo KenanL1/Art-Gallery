@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { logo } from "../assets";
 import { useAppSelector, useAppDispatch } from "../store";
 import {
   selectIsLoggedIn,
@@ -71,7 +70,7 @@ const Navigator = () => {
   return (
     <header className="w-full flex justify-between items-center bg-white py-1 border-b border-b-[$e6ebf4]">
       <Link to="/">
-        <img src={logo} alt="logo" className="w-28 object-contain" />
+        <div className="text-3xl font-bold text-gray-900">Muse</div>
       </Link>
       <div>
         {isLoggedIn ? (

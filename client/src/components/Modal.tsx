@@ -133,11 +133,11 @@ const Modal = () => {
                   <div>
                     <img src={post.photo}></img>
                   </div>
-                  <div className=" ">
+                  <div className="flex justify-end">
                     <button
                       type="button"
                       onClick={likePost}
-                      className="outline-none bg-transparent border-none"
+                      className="outline-none bg-transparent border-none mx-4"
                     >
                       {isLiked ? (
                         <img

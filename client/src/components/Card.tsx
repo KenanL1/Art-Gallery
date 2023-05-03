@@ -20,15 +20,23 @@ export interface CardType {
 
 const Card = ({ _id, name, prompt, photo, photo_id, model }: CardType) => {
   const dispatch = useAppDispatch();
-  const deletePost = async (_id: string | undefined, photo_id: string) => {
+
+  const deletePost = async (
+    e: React.SyntheticEvent,
+    _id: string | undefined,
+    photo_id: string
+  ) => {
     try {
+      e.preventDefault();
+      e.stopPropagation();
       await fetch("http://localhost:5000/api/v1/post", {
-        method: "delete",
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ _id: _id, photo_id: photo_id }),
       });
+      window.location.reload();
     } catch (e) {
       alert(e);
     }
@@ -63,7 +71,7 @@ const Card = ({ _id, name, prompt, photo, photo_id, model }: CardType) => {
           <div>
             <button
               type="button"
-              onClick={() => deletePost(_id, photo_id)}
+              onClick={(e) => deletePost(e, _id, photo_id)}
               className="outline-none bg-transparent border-none"
             >
               <img

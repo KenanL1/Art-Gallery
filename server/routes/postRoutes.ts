@@ -85,16 +85,16 @@ router.route("/").post(async (req: express.Request, res: express.Response) => {
 router
   .route("/")
   .delete(async (req: express.Request, res: express.Response) => {
-    const { _id, public_id } = req.body;
+    const { _id, photo_id } = req.body;
 
     try {
-      await cloudinary.uploader.destroy(public_id);
+      await cloudinary.uploader.destroy(photo_id);
       await Post.deleteOne({ _id: _id });
-      res.status(200).json({ sucess: true });
+      res.status(200).json({ success: true });
     } catch (err) {
       res.status(500).json({
         success: false,
-        message: "Unable to delete img, img may already be deleted",
+        message: err,
       });
     }
   });

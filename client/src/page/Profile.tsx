@@ -7,6 +7,7 @@ import CardList from "../components/CardList";
 const Profile = () => {
   const { user } = useParams();
   const allPost = useAppSelector(selectPost);
+  const [sortBy, setSortBy] = useState<string>("newest");
   const [profile, setProfile] = useState<any>({});
   const [loading, setLoading] = useState<Boolean>(true);
   const [following, setFollowing] = useState<number>(0);
@@ -149,22 +150,37 @@ const Profile = () => {
   // Sort post by newest
   const sortByNewest = () => {
     return posts.sort((x: any, y: any) => {
-      return x.timestamp - y.timestamp;
+      return new Date(x.createdAt).getTime() - new Date(y.createdAt).getTime();
     });
   };
 
   // Sort post by oldest
   const sortByOldest = () => {
     return posts.sort((x: any, y: any) => {
-      return y.timestamp - x.timestamp;
+      return new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime();
     });
   };
 
   // Sort post by most liked
   const sortByLikes = () => {
     return posts.sort((x: any, y: any) => {
-      return x.likes - y.likes;
+      return y.likes - x.likes;
     });
+  };
+
+  const sortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortBy(e.target.value);
+    switch (e.target.value) {
+      case "newest":
+        setPosts(sortByNewest());
+        break;
+      case "oldest":
+        setPosts(sortByOldest());
+        break;
+      case "likes":
+        setPosts(sortByLikes());
+        break;
+    }
   };
 
   useEffect(() => {
@@ -201,10 +217,10 @@ const Profile = () => {
               </button>
             </div>
             <div className="p-2">
-              <select>
-                <option>Newest</option>
-                <option>Oldest</option>
-                <option>Most Liked</option>
+              <select onChange={sortChange} value={sortBy}>
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="likes">Most Liked</option>
               </select>
             </div>
           </div>
