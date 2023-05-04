@@ -10,6 +10,7 @@ const Login = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
       case "username":
@@ -21,6 +22,7 @@ const Login = () => {
     }
   };
 
+  // Send a request to login
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -44,17 +46,17 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center">
-      <h1 className="font-extrabold text-[#222328] text-4xl text-center mt-8 mb-8">
+    <div className="flex flex-col justify-start items-center">
+      <h1 className="font-extrabold text-[#222328] text-4xl mt-8 mb-8">
         Login
       </h1>
-      <form className="w-full" onSubmit={handleSubmit}>
+      <form className="w-full max-w-md" onSubmit={handleSubmit}>
         <div className="flex items-center gap-2 mb-2">
-          <label className="block text-sm font-medium text-gray-900">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             Username
           </label>
           <input
-            className="w-full border rounded-lg p-3"
+            className="border rounded-lg w-full p-3"
             type="username"
             id="username"
             name="username"
@@ -65,11 +67,11 @@ const Login = () => {
         </div>
 
         <div className="flex items-center gap-2 mb-2">
-          <label className="block text-sm font-medium text-gray-900">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             Password
           </label>
           <input
-            className="w-full border rounded-lg p-3"
+            className="border rounded-lg w-full p-3"
             type="password"
             id="password"
             name="password"
@@ -78,18 +80,21 @@ const Login = () => {
             required
           ></input>
         </div>
-        <div className="flex items-center gap-2 mb-2">
+        <div className="flex justify-center">
           <button
-            className="block mx-auto bg-blue-500 text-white py-2 px-4 rounded"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             type="submit"
           >
             Login
           </button>
         </div>
       </form>
-      <p>
+      <p className="mt-8 text-gray-600">
         Don't have an account?{" "}
-        <Link className="text-blue-500" to="/register">
+        <Link
+          className="text-blue-500 hover:text-blue-700 font-bold"
+          to="/register"
+        >
           Sign Up
         </Link>
       </p>

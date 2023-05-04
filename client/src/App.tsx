@@ -14,7 +14,7 @@ const App = () => {
     <Router>
       {isModalOpen && <Modal />}
       <Navigator />
-      <main className="w-full bg-[#f9fafe] min-h-[calc(100vh-73px)]">
+      <main className="w-full bg-[#f9fafe] min-h-[calc(100vh-73px)] p-4">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
@@ -37,7 +37,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
         </Routes>
       </main>
-      <footer className="w-full flex justify-between items-center bg-white py-4 border-t border-t-[$e6ebf4]">
+      <footer className="w-full flex justify-between items-center bg-white p-4 border-t border-t-[$e6ebf4]">
         @Mar 2023 - Apr 2023
       </footer>
     </Router>

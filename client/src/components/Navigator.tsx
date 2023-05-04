@@ -22,12 +22,14 @@ const Navigator = () => {
       setIsOpen(!isOpen);
     };
 
-    const appLogout = () => {
+    const handleLogout: React.MouseEventHandler<HTMLButtonElement> = () => {
       dispatch(logout());
       navigate("/");
     };
 
-    const goToProfile = () => {
+    const handleGoToProfile: React.MouseEventHandler<
+      HTMLButtonElement
+    > = () => {
       navigate(`/profile/${user}`);
     };
 
@@ -35,16 +37,18 @@ const Navigator = () => {
       name,
       clickHandler,
     }: {
-      name: String;
-      clickHandler: any;
+      name: string;
+      clickHandler: React.MouseEventHandler;
     }) => {
       return (
-        <button
+        <a
+          href="#"
+          role="button"
           className="block px-4 py-2 w-full text-gray-800 hover:bg-blue-500 hover:text-white"
           onClick={clickHandler}
         >
           {name}
-        </button>
+        </a>
       );
     };
 
@@ -52,15 +56,15 @@ const Navigator = () => {
       <div className="relative inline-block">
         <button
           onClick={toggleDropdown}
-          className="px-4 py-2 rounded-md bg-green-700 text-white font-bold"
+          className="px-4 py-2 rounded-md bg-green-700 hover:bg-green-900 text-white font-bold"
         >
           {username && username[0]}
         </button>
         {isOpen && (
           <div className="absolute right-0 origin-top-right mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-10">
             {/* Dropdown content */}
-            <MenuItem name="Profile" clickHandler={goToProfile} />
-            <MenuItem name="Logout" clickHandler={appLogout} />
+            <MenuItem name="Profile" clickHandler={handleGoToProfile} />
+            <MenuItem name="Logout" clickHandler={handleLogout} />
           </div>
         )}
       </div>
@@ -68,7 +72,7 @@ const Navigator = () => {
   };
 
   return (
-    <header className="w-full flex justify-between items-center bg-white py-1 border-b border-b-[$e6ebf4]">
+    <header className="w-full flex justify-between items-center bg-white p-3 border-b border-b-[$e6ebf4]">
       <Link to="/">
         <div className="text-3xl font-bold text-gray-900">Muse</div>
       </Link>
@@ -78,7 +82,7 @@ const Navigator = () => {
             <ProfileDropdown />
             <Link
               to="/create"
-              className="font-inter font-medium bg-[#6469ff] text-white px-4 py-2 rounded-md ml-3"
+              className="font-inter font-medium bg-purple-600 hover:bg-purple-800 text-white px-4 py-2 rounded-md ml-3"
             >
               Create
             </Link>
@@ -86,7 +90,7 @@ const Navigator = () => {
         ) : (
           <Link
             to="/login"
-            className="font-inter font-medium bg-green-600 text-white px-4 py-2 rounded-md"
+            className="font-inter font-medium bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded-md"
           >
             Login
           </Link>

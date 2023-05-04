@@ -9,7 +9,7 @@ const Profile = () => {
   const allPost = useAppSelector(selectPost);
   const [sortBy, setSortBy] = useState<string>("newest");
   const [profile, setProfile] = useState<any>({});
-  const [loading, setLoading] = useState<Boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [following, setFollowing] = useState<number>(0);
   const [followers, setFollowers] = useState<number>(0);
   const [likes, setLikes] = useState<number>(0);
@@ -97,6 +97,7 @@ const Profile = () => {
       }
       getFollowerCount();
       getFollowingCount();
+      getLikesCount();
       fetchPostFromUser();
     } catch (e) {
       console.error(e);
@@ -168,6 +169,7 @@ const Profile = () => {
     });
   };
 
+  // Calls the specific sort function based on the selected option
   const sortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortBy(e.target.value);
     switch (e.target.value) {
