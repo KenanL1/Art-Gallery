@@ -1,32 +1,40 @@
-# AI Art Generator
+# AI Art Generator (Muse)
 
-The platform is designed for users to create, share and post AI-generated artwork using various models. It includes a homepage that displays posts from all users, a creation page for generating personal AI art, and a login/register page.
+The platform is designed for users to create, share, and discover AI-generated artwork using various models. With a user-friendly interface that includes a homepage displaying posts from all users, a profile page to view personal and liked posts, a creation page for generating unique AI art, and a login/register page, users can easily connect with other artists and share their creations.
 
-Uses OpenAI and Stable Diffusion text-to-image API to generate unique images via text prompt
+OpenAI and Stable Diffusion text-to-image API to generate one-of-a-kind images based on textual prompts, and users can follow others, "like" posts, and even download images to save them.
 
-## Setup
+### Setup
 
-This requires [Node.js](https://nodejs.org/)
+To run this project, you will need to have [Node.js](https://nodejs.org/) installed on your system or follow the steps with Docker below
 
-Install the dependencies and start the server
+#### Server Setup
+
+Install the dependencies and start the **server**
 
 ```
+cd server
 npm install
 npm start
 ```
 
-Install the dependencies and start the client
+#### Client Setup
+
+Install the dependencies and start the **client**
 
 ```
+cd client
 npm install
 npm run dev
 ```
 
 ### Tech Stack
 
-By leveraging the **MERN stack (MongoDB, Express.js, React, Node.js)** to create a **Single Page Application (SPA)**, developers can achieve a more engaging and seamless user experience. With dynamic content updates and reusable components, users can enjoy a faster and more responsive application that is easy to use and navigate.
+To build our application, we chose to use the **MERN stack**, which consists of **MongoDB, Express.js, React, and Node.js**. This allowed us to use a unified set of technologies for both the frontend and backend, streamlining development and reducing the complexity of the application architecture. By building a **Single Page Application (SPA)**, we were able to take advantage of reusable components, which increased efficiency and reduced development time. SPAs load only once and dynamically update content, resulting in a fast and responsive user experience that is both engaging and seamless. Additionally, our use of JavaScript and TypeScript throughout the stack allows for easier maintenance and better collaboration among developers.
 
 **TypeScript** provides static type-checking, which can help to catch errors early in the development process and make code more robust and reliable.
+
+As a **NoSQL database, MongoDB** stores data in flexible, JSON-like documents rather than predefined tables. This allows for more adaptable data modeling, making it easier to manage complex data structures and accommodate changes in data requirements. Additionally, MongoDB is designed to handle high volumes of data and traffic, making it a scalable choice for applications with large user bases or data requirements.
 
 ### State Management
 
@@ -43,3 +51,47 @@ Reduced server load: Because JWTs are self-contained, the server does not need t
 Improved security: JWTs are encrypted and signed, which makes them difficult to tamper with or forge. This helps to prevent unauthorized access and protects sensitive data.
 
 ### Docker Container
+
+Docker containers provide a powerful and flexible way to package, deploy, and manage applications. This repository includes Dockerfiles for both the client and server projects, allowing you to easily create a Docker image and run the application through a Docker container.
+
+#### Prerequisites
+
+Before getting started, make sure the following software is installed on your machine: [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+#### Building and Running the Server Docker Image
+
+To build and run the server Docker image from the command line, navigate to the `server` directory and run the following commands:
+
+```
+cd server
+docker build -t server .
+docker run --name server -d -p 5000:5000 server
+```
+
+This will create a Docker image named `server` and start a Docker container named `server`, which will run on port `5000`.
+
+#### Building and Running the Client Docker Image
+
+To build and run the client Docker image from the command line, navigate to the `client` directory and run the following commands:
+
+```
+cd client
+docker build -t client .
+docker run --name client -d -p 3000:3000 client
+```
+
+This will create a Docker image named `client` and start a Docker container named `client`, which will run on port `3000`.
+
+#### Viewing Built Images and Active Containers
+
+To view all built Docker images, run the following command:
+
+```
+docker image ls
+```
+
+To view all active Docker containers, run the following command:
+
+```
+ docker ps -a
+```
