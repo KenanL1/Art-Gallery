@@ -47,17 +47,12 @@ const Login = () => {
 
   return (
     <div className="flex flex-col justify-start items-center">
-      <h1 className="font-extrabold text-[#222328] text-4xl mt-8 mb-8">
-        Login
-      </h1>
+      <h1>Login</h1>
       <form className="w-full max-w-md" onSubmit={handleSubmit}>
         <div className="flex items-center gap-2 mb-2">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Username
-          </label>
+          <label>Username</label>
           <input
-            className="border rounded-lg w-full p-3"
-            type="username"
+            type="text"
             id="username"
             name="username"
             value={username}
@@ -67,11 +62,8 @@ const Login = () => {
         </div>
 
         <div className="flex items-center gap-2 mb-2">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Password
-          </label>
+          <label>Password</label>
           <input
-            className="border rounded-lg w-full p-3"
             type="password"
             id="password"
             name="password"
@@ -81,15 +73,12 @@ const Login = () => {
           ></input>
         </div>
         <div className="flex justify-center">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            type="submit"
-          >
+          <button className="bg-blue-500 hover:bg-blue-700" type="submit">
             Login
           </button>
         </div>
       </form>
-      <p className="mt-8 text-gray-600">
+      <p className="mt-8">
         Don't have an account?{" "}
         <Link
           className="text-blue-500 hover:text-blue-700 font-bold"

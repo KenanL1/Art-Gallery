@@ -198,9 +198,9 @@ const Profile = () => {
               {profile.username}
             </h2>
             <div className="flex gap-4 text-white">
-              <p>{followers} Followers</p>
-              <p>{following} Following</p>
-              <p>{likes} Likes</p>
+              <p className="text-white">{followers} Followers</p>
+              <p className="text-white">{following} Following</p>
+              <p className="text-white">{likes} Likes</p>
             </div>
           </div>
           <div className="flex py-2 justify-between">

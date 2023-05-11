@@ -126,7 +126,7 @@ const Modal = () => {
           <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
             <div
               onClick={modalClick}
-              className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4"
+              className="bg-white dark:bg-slate-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4"
             >
               <div className="flex justify-between m-4">
                 <div>
@@ -166,9 +166,12 @@ const Modal = () => {
                     </button>
                   </div>
                 </div>
-                <div>
+                <div className="ml-3">
                   <h3>
-                    <span className="font-bold"> {post.author.username}</span>
+                    <span className="font-bold dark:text-white">
+                      {" "}
+                      {post.author.username}
+                    </span>
                     <button
                       className="font-semibold text-xs bg-[#EcECF1] py-1 px-2 rounded-[5px] text-black ml-2"
                       onClick={followUser}
@@ -176,7 +179,7 @@ const Modal = () => {
                       {isFollowed ? "Unfollow" : "Follow"}
                     </button>
                   </h3>
-                  <h2 className="text-2xl">{post.name}</h2>
+                  <h2 className="text-2xl dark:text-white">{post.name}</h2>
                   <p className="py-1 border-b border-b-[$e6ebf4]">
                     <span className="font-bold">prompt: </span>
                     {post.prompt}

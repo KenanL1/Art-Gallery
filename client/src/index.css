@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  font-family: 'Inter', sans-serif;
-}
 
 @media screen and (min-width: 480px) {
   .card:nth-child(7n + 1) {
@@ -13,11 +10,37 @@
   }
 }
 
-.prompt::-webkit-scrollbar {
-  width: 5px;
-}
+@layer base {
+  html {
+    font-family: 'Inter', sans-serif;
+  }
 
-.prompt::-webkit-scrollbar-thumb {
-  background-color: #666e75;
-  border-radius: 5px;
+  button {
+    @apply text-white font-bold py-2 px-4 rounded dark:text-slate-800
+  }
+
+  h1 {
+    @apply font-extrabold text-slate-800 dark:text-white text-4xl mt-8 mb-8
+  }
+
+  input[type=text], input[type=password] {
+    @apply border rounded-lg w-full p-3
+  }
+
+  label {
+    @apply block text-sm font-medium text-gray-800 mb-2 dark:text-white
+  }
+
+  p {
+    @apply text-slate-800 dark:text-white
+  }
+
+  select {
+    @apply rounded-lg p-1
+  }
+
+  footer {
+    @apply w-full bg-white dark:bg-slate-800 dark:text-white p-4 border-t border-t-white
+  }
+
 }

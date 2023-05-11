@@ -5,7 +5,7 @@ import { CardType } from "./Card";
 const CardList = ({ data, title }: { data: CardType[]; title: string }) => {
   if (data && data.length > 0) {
     return (
-      <div className="grid lg:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-3">
+      <div className="grid lg:grid-cols-4 sm:grid-cols-3 grid-cols-1 gap-3">
         {data.map((post) => (
           <Card key={post._id} {...post} />
         ))}

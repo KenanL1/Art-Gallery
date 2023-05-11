@@ -53,19 +53,11 @@ const Register = () => {
 
   return (
     <div className="flex flex-col justify-start items-center">
-      <h1 className="font-extrabold text-[#222328] text-4xl mt-8 mb-8">
-        Register
-      </h1>
+      <h1>Register</h1>
       <form className="w-full max-w-md" onSubmit={handleSubmit}>
         <div className="flex items-center gap-2 mb-2">
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Name
-          </label>
+          <label htmlFor="name">Name</label>
           <input
-            className="border rounded-lg w-full p-3"
             type="text"
             id="name"
             name="name"
@@ -76,14 +68,8 @@ const Register = () => {
         </div>
 
         <div className="flex items-center gap-2 mb-2">
-          <label
-            htmlFor="username"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Username
-          </label>
+          <label htmlFor="username">Username</label>
           <input
-            className="border rounded-lg w-full p-3"
             type="text"
             id="username"
             name="username"
@@ -94,14 +80,8 @@ const Register = () => {
         </div>
 
         <div className="flex items-center gap-2 mb-2">
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Password
-          </label>
+          <label htmlFor="password">Password</label>
           <input
-            className="border rounded-lg w-full p-3"
             type="password"
             id="password"
             name="password"
@@ -111,17 +91,14 @@ const Register = () => {
           ></input>
         </div>
         <div className="flex justify-center">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            type="submit"
-          >
+          <button className="bg-blue-500 hover:bg-blue-700" type="submit">
             Register
           </button>
         </div>
       </form>
-      <p>
+      <p className="mt-8">
         Have an account?{" "}
-        <Link className="text-blue-500" to="/login">
+        <Link className="text-blue-500 hover:opacity-80" to="/login">
           Login
         </Link>
       </p>

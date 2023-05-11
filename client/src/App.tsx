@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import "./App.css";
 import { Home, CreatePost, Login, Register, Profile } from "./page";
 import { Navigator } from "./components";
 import { Modal } from "./components";
@@ -14,7 +13,7 @@ const App = () => {
     <Router>
       {isModalOpen && <Modal />}
       <Navigator />
-      <main className="w-full bg-[#f9fafe] min-h-[calc(100vh-73px)] p-4">
+      <main className="w-full bg-white dark:bg-slate-800 min-h-[calc(100vh-73px)] p-4">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
@@ -37,9 +36,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
         </Routes>
       </main>
-      <footer className="w-full flex justify-between items-center bg-white p-4 border-t border-t-[$e6ebf4]">
-        @Mar 2023 - Apr 2023
-      </footer>
+      <footer>@Mar 2023 - Apr 2023</footer>
     </Router>
   );
 };

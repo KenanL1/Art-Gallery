@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../store";
 import {
@@ -7,6 +7,8 @@ import {
   selectUsername,
   logout,
 } from "../store/Reducers/authSlice";
+import { selectDarkMode, switchMode } from "../store/Reducers/themeSlice";
+import { Moon, Sun } from "../assets";
 
 const Navigator = () => {
   const dispatch = useAppDispatch();
@@ -14,6 +16,11 @@ const Navigator = () => {
   const isLoggedIn = useAppSelector(selectIsLoggedIn);
   const user = useAppSelector(selectUser);
   const username = useAppSelector(selectUsername);
+  const darkMode = useAppSelector(selectDarkMode);
+
+  // useEffect(() => {
+  //   dispatch(switchMode);
+  // }, [darkMode]);
 
   const ProfileDropdown = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -53,12 +60,12 @@ const Navigator = () => {
     };
 
     return (
-      <div className="relative inline-block">
+      <div className="">
         <button
           onClick={toggleDropdown}
-          className="px-4 py-2 rounded-md bg-green-700 hover:bg-green-900 text-white font-bold"
+          className=" bg-green-700 hover:bg-green-900 dark:text-white"
         >
-          {username && username[0]}
+          {username && username[0].toUpperCase()}
         </button>
         {isOpen && (
           <div className="absolute right-0 origin-top-right mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-10">
@@ -72,13 +79,25 @@ const Navigator = () => {
   };
 
   return (
-    <header className="w-full flex justify-between items-center bg-white p-3 border-b border-b-[$e6ebf4]">
+    <header className="w-full flex justify-between items-center bg-white dark:bg-slate-800 p-3 border-b border-b-[$e6ebf4]">
       <Link to="/">
-        <div className="text-3xl font-bold text-gray-900">Muse</div>
+        <div className="text-3xl font-bold text-slate-800 dark:text-white">
+          Muse
+        </div>
       </Link>
-      <div>
+      <div className="flex">
+        <div
+          className="mx-3 flex items-center transition cursor-pointer hover:text-blue-600"
+          onClick={() => dispatch(switchMode())}
+        >
+          {!darkMode ? (
+            <Sun width="24px" height="24px" />
+          ) : (
+            <Moon width="24px" height="24px" />
+          )}
+        </div>
         {isLoggedIn ? (
-          <div className="">
+          <div className="flex">
             <ProfileDropdown />
             <Link
               to="/create"

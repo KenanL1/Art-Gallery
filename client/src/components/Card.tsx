@@ -51,7 +51,7 @@ const Card = ({ _id, name, prompt, photo, photo_id, model }: CardType) => {
       className="rounded-xl group relative shadow-card hover:shadow-cardhover card"
     >
       <img
-        className="w-full h-auto object-cover rounded-xl"
+        className="h-auto object-cover rounded-xl"
         src={photo}
         alt={prompt}
       />

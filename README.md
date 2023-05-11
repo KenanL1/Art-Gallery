@@ -30,7 +30,7 @@ npm run dev
 
 ### Tech Stack
 
-To build our application, we chose to use the **MERN stack**, which consists of **MongoDB, Express.js, React, and Node.js**. This allowed us to use a unified set of technologies for both the frontend and backend, streamlining development and reducing the complexity of the application architecture. By building a **Single Page Application (SPA)**, we were able to take advantage of reusable components, which increased efficiency and reduced development time. SPAs load only once and dynamically update content, resulting in a fast and responsive user experience that is both engaging and seamless. Additionally, our use of JavaScript and TypeScript throughout the stack allows for easier maintenance and better collaboration among developers.
+To build our application, we chose to use the **MERN stack**, which consists of **MongoDB, Express.js, React, and Node.js**. This allowed us to use a unified set of technologies for both the frontend and backend, streamlining development and reducing the complexity of the application architecture. By building a **Single Page Application (SPA)**, we were able to take advantage of reusable components, which increased efficiency and reduced development time. SPAs load only once and dynamically update content through client-side rendering, resulting in a fast and responsive user experience that is both engaging and seamless. Additionally, the use of JavaScript and TypeScript throughout the stack allows for easier maintenance and better collaboration among developers.
 
 **TypeScript** provides static type-checking, which can help to catch errors early in the development process and make code more robust and reliable.
 
