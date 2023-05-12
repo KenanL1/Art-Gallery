@@ -30,11 +30,15 @@ npm run dev
 
 ### Tech Stack
 
-To build our application, we chose to use the **MERN stack**, which consists of **MongoDB, Express.js, React, and Node.js**. This allowed us to use a unified set of technologies for both the frontend and backend, streamlining development and reducing the complexity of the application architecture. By building a **Single Page Application (SPA)**, we were able to take advantage of reusable components, which increased efficiency and reduced development time. SPAs load only once and dynamically update content through client-side rendering, resulting in a fast and responsive user experience that is both engaging and seamless. Additionally, the use of JavaScript and TypeScript throughout the stack allows for easier maintenance and better collaboration among developers.
+To build our application, we chose to use the **MERN stack**, which consists of **MongoDB, Express.js, React, and Node.js**. This allowed us to use a unified set of technologies (JS/TS) for both the frontend and backend, streamlining development and reducing the complexity of the application architecture. By building a **Single Page Application (SPA)**, we were able to take advantage of reusable components, which increased efficiency and reduced development time. SPAs load only once and dynamically update content through **client-side rendering**, paired with React's virtual DOM results in a faster and more responsive applicatitons that is both engaging and seamless.
 
 **TypeScript** provides static type-checking, which can help to catch errors early in the development process and make code more robust and reliable.
 
 As a **NoSQL database, MongoDB** stores data in flexible, JSON-like documents rather than predefined tables. This allows for more adaptable data modeling, making it easier to manage complex data structures and accommodate changes in data requirements. Additionally, MongoDB is designed to handle high volumes of data and traffic, making it a scalable choice for applications with large user bases or data requirements.
+
+**Tailwind CSS** provides a set of pre-designed classes that can be utilized to style an application. This approach maintains a consistent naming convention, reduces the amount of CSS code to write, and simplifies the maintenance of the codebase. Additionally, it facilitates the creation of intricate responsive layouts, and enhances the speed of the development process.
+
+**Vite** uses an optimized build pipeline that leverages native ES modules, resulting in faster builds and smaller bundle sizes. Vite supports HMR Hot Module Replacement (HMR), which allows developers to update code changes in real-time without refreshing the page.
 
 ### State Management
 
