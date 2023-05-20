@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 import { v2 as cloudinary } from "cloudinary";
 import Post from "../models/post.js";
 import User from "../models/user.js";
+import { routeHandler } from "../utils/routeUils.js";
 
 dotenv.config();
 
@@ -16,50 +17,35 @@ cloudinary.config({
 
 // Return all posts
 router.route("/").get(async (req: express.Request, res: express.Response) => {
-  try {
+  await routeHandler(res, async () => {
     const posts = await Post.find({});
     res.status(200).json({ success: true, data: posts });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "Fetching posts failed, please try again",
-    });
-  }
+  });
 });
 
 // Return all post by user
 router.route("/userPost/:userId").get(async (req, res) => {
-  const { userId } = req.params;
-  try {
+  await routeHandler(res, async () => {
+    const { userId } = req.params;
     const posts = await Post.find({ author: userId });
     res.status(200).json({ success: true, data: posts });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err,
-    });
-  }
+  });
 });
 
 // Return post by ID
 router
   .route("/:postID")
   .get(async (req: express.Request, res: express.Response) => {
-    try {
+    await routeHandler(res, async () => {
       const { postID } = req.params;
       const post = await Post.findById(postID).populate("author");
       res.json({ success: true, data: post });
-    } catch (err) {
-      res.status(500).json({
-        success: false,
-        message: err,
-      });
-    }
+    });
   });
 
 // Add a new post
 router.route("/").post(async (req: express.Request, res: express.Response) => {
-  try {
+  await routeHandler(res, async () => {
     const { name, prompt, photo, model } = req.body;
     const cloudinaryRes = await cloudinary.uploader.upload(photo);
     const author = await User.findOne({ username: name });
@@ -73,12 +59,7 @@ router.route("/").post(async (req: express.Request, res: express.Response) => {
     });
 
     res.status(200).json({ success: true, data: newPost });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err,
-    });
-  }
+  });
 });
 
 // Delete post
@@ -97,6 +78,11 @@ router
         message: err,
       });
     }
+    await routeHandler(res, async () => {
+      const { username } = req.params;
+      const user = await User.findOne({ username: username });
+      res.json({ success: true, data: user });
+    });
   });
 
 export default router;

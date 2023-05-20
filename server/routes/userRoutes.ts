@@ -1,5 +1,6 @@
 import express from "express";
 import User from "../models/user.js";
+import { routeHandler } from "../utils/routeUils.js";
 
 const router = express.Router();
 
@@ -7,32 +8,22 @@ const router = express.Router();
 router
   .route("/:userID")
   .get(async (req: express.Request, res: express.Response) => {
-    try {
+    await routeHandler(res, async () => {
       const { userID } = req.params;
       const user = await User.findById(userID);
       res.json({ success: true, data: user });
-    } catch (err) {
-      res.status(500).json({
-        success: false,
-        message: "Fetching user failed, please try again later",
-      });
-    }
+    });
   });
 
 // get the user by username
 router
   .route("/username/:username")
   .get(async (req: express.Request, res: express.Response) => {
-    try {
+    await routeHandler(res, async () => {
       const { username } = req.params;
       const user = await User.findOne({ username: username });
       res.json({ success: true, data: user });
-    } catch (err) {
-      res.status(500).json({
-        success: false,
-        message: "Fetching user failed, please try again later",
-      });
-    }
+    });
   });
 
 export default router;

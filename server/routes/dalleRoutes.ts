@@ -1,6 +1,7 @@
 import express from "express";
 import * as dotenv from "dotenv";
 import { Configuration, OpenAIApi } from "openai";
+import { routeHandler } from "../utils/routeUils.js";
 
 dotenv.config();
 
@@ -14,7 +15,7 @@ const openai = new OpenAIApi(configuration);
 
 // Call OpenAI Text-to-Image API to generate an image
 router.route("/").post(async (req: express.Request, res: express.Response) => {
-  try {
+  await routeHandler(res, async () => {
     const { prompt } = req.body;
     const aiResponse = await openai.createImage({
       prompt,
@@ -25,10 +26,7 @@ router.route("/").post(async (req: express.Request, res: express.Response) => {
 
     const image = aiResponse.data.data[0].b64_json;
     res.status(200).json({ photo: image });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ Error: "Something went wrong" });
-  }
+  });
 });
 
 export default router;
