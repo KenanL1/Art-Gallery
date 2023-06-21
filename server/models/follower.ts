@@ -1,16 +1,17 @@
-import mongoose from "mongoose";
-
-const Follower = new mongoose.Schema({
+import mongoose, { Schema, Document, Model } from "mongoose";
+export interface IFollower extends Document {
+  user: Schema.Types.ObjectId;
+  following: Schema.Types.ObjectId;
+}
+const FollowerSchema: Schema = new mongoose.Schema({
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
   },
   following: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
   },
 });
-
-const FollowerSchema = mongoose.model("Follower", Follower);
-
-export default FollowerSchema;
+const FollowerModel: Model<IFollower> = mongoose.model<IFollower>("Follower", FollowerSchema);
+export default FollowerModel;

@@ -1,4 +1,17 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
+
+export interface IPost extends Document {
+  author: Schema.Types.ObjectId;
+  name: string;
+  prompt?: string;
+  photo: string;
+  photo_id?: string;
+  likes: number;
+  model?: string;
+  guidance_scale?: number;
+  size?: string;
+  steps?: number;
+}
 
 const Post = new mongoose.Schema(
   {
@@ -8,7 +21,7 @@ const Post = new mongoose.Schema(
       required: true,
     },
     name: { type: String, required: true },
-    prompt: { type: String, required: true },
+    prompt: { type: String },
     photo: { type: String, required: true },
     photo_id: { type: String },
     likes: { type: Number, default: 0 },
@@ -20,6 +33,6 @@ const Post = new mongoose.Schema(
   { timestamps: true }
 );
 
-const PostSchema = mongoose.model("Post", Post);
+const PostSchema: Model<IPost> = mongoose.model<IPost>("Post", Post);
 
 export default PostSchema;

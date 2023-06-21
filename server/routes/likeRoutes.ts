@@ -1,13 +1,13 @@
-import express from "express";
+import express, { Request, Response, Router } from "express";
 import Likes from "../models/likes.js";
 import Post from "../models/post.js";
 import User from "../models/user.js";
 import { routeHandler } from "../utils/routeUils.js";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Get post liked by the user
-router.route("/:userId").get(async (req, res) => {
+router.route("/:userId").get(async (req: Request, res: Response) => {
   await routeHandler(res, async () => {
     const { userId } = req.params;
     const likes = await Likes.find({ user: userId }).populate("post");
@@ -16,7 +16,7 @@ router.route("/:userId").get(async (req, res) => {
 });
 
 // Get number of likes user recieved
-router.route("/:userId/likeCount").get(async (req, res) => {
+router.route("/:userId/likeCount").get(async (req: Request, res: Response) => {
   await routeHandler(res, async () => {
     const { userId } = req.params;
     const results = await User.aggregate([
@@ -57,7 +57,7 @@ router.route("/:userId/likeCount").get(async (req, res) => {
 });
 
 // Check if a post is liked by the user
-router.route("/:userId/:postId").get(async (req, res) => {
+router.route("/:userId/:postId").get(async (req: Request, res: Response) => {
   await routeHandler(res, async () => {
     const { userId, postId } = req.params;
     const likes = await Likes.find({
@@ -71,7 +71,7 @@ router.route("/:userId/:postId").get(async (req, res) => {
 });
 
 // Like a post
-router.route("/:userId/:postId").post(async (req, res) => {
+router.route("/:userId/:postId").post(async (req: Request, res: Response) => {
   await routeHandler(res, async () => {
     const { userId, postId } = req.params;
     const likes = await Likes.create({
@@ -84,7 +84,7 @@ router.route("/:userId/:postId").post(async (req, res) => {
 });
 
 // Unlike a post
-router.route("/:userId/:postId").delete(async (req, res) => {
+router.route("/:userId/:postId").delete(async (req: Request, res: Response) => {
   await routeHandler(res, async () => {
     const { userId, postId } = req.params;
     await Likes.deleteOne({

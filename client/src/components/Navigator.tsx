@@ -40,6 +40,10 @@ const Navigator = () => {
       navigate(`/profile/${user}`);
     };
 
+    const handleGoToUpload: React.MouseEventHandler<HTMLButtonElement> = () => {
+      navigate("/upload");
+    };
+
     const MenuItem = ({
       name,
       clickHandler,
@@ -70,6 +74,7 @@ const Navigator = () => {
         {isOpen && (
           <div className="absolute right-0 origin-top-right mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-10">
             {/* Dropdown content */}
+            <MenuItem name="Upload" clickHandler={handleGoToUpload} />
             <MenuItem name="Profile" clickHandler={handleGoToProfile} />
             <MenuItem name="Logout" clickHandler={handleLogout} />
           </div>

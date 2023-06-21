@@ -1,16 +1,21 @@
-import mongoose from "mongoose";
-
-const Auth = new mongoose.Schema({
+import mongoose, { Schema, Document, Model } from "mongoose";
+export interface IAuth extends Document {
+  _id: string;
+  name: string;
+  username: string;
+  password: string;
+  admin?: boolean;
+  profile?: Schema.Types.ObjectId;
+}
+const AuthSchema: Schema = new mongoose.Schema({
   name: { type: String, required: true },
   username: { type: String, required: true },
   password: { type: String, required: true },
   admin: { type: Boolean },
   profile: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
   },
 });
-
-const AuthSchema = mongoose.model("Auth", Auth);
-
-export default AuthSchema;
+const AuthModel: Model<IAuth> = mongoose.model<IAuth>("Auth", AuthSchema);
+export default AuthModel;

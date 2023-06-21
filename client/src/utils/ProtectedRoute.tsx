@@ -4,6 +4,7 @@ import { useAppSelector, useAppDispatch } from "../store";
 import { selectIsLoggedIn } from "../store/Reducers/authSlice";
 import { logout } from "../store/Reducers/authSlice";
 
+// Routes that need authentication to access
 const ProtectedRoute = (props: any) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();

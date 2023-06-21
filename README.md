@@ -1,8 +1,10 @@
-# AI Art Generator (Muse)
+# Art Gallery (Muse)
 
-The platform is designed for users to create, share, and discover AI-generated artwork using various models. With a user-friendly interface that includes a homepage displaying posts from all users, a profile page to view personal and liked posts, a creation page for generating unique AI art, and a login/register page, users can easily connect with other artists and share their creations.
+The platform is designed for users to create, upload, share, and discover AI-generated artwork using various models. With a user-friendly interface that includes a homepage displaying posts from all users, a profile page to view personal and liked posts, a creation page for generating unique AI art, and a login/register page, users can easily connect with other artists and share their creations.
 
 OpenAI and Stable Diffusion text-to-image API to generate one-of-a-kind images based on textual prompts, and users can follow others, "like" posts, and even download images to save them.
+
+This project is for my learning of React, Node, Tailwind, Redux, and Typescript
 
 ### Setup
 

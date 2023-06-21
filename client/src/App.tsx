@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import { Home, CreatePost, Login, Register, Profile } from "./page";
+import { Home, CreatePost, Login, Register, Profile, Upload } from "./page";
 import { Navigator } from "./components";
 import { Modal } from "./components";
 import { useAppSelector } from "./store";
@@ -25,6 +25,14 @@ const App = () => {
             }
           />
           <Route
+            path="/upload"
+            element={
+              <ProtectedRoute>
+                <Upload />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/profile/:user"
             element={
               <ProtectedRoute>
@@ -36,7 +44,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
         </Routes>
       </main>
-      <footer>@Mar 2023 - Apr 2023</footer>
+      <footer>2023</footer>
     </Router>
   );
 };

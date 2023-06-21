@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Application } from "express";
 import * as dotenv from "dotenv";
 import cors from "cors";
 import passport from "passport";
@@ -17,7 +17,7 @@ import likeRoutes from "./routes/likeRoutes.js";
 dotenv.config();
 
 // Create the Express application
-const app = express();
+const app: Application = express();
 
 // Initialize paasport-jwt strategy
 initializePassport(passport);

@@ -1,16 +1,17 @@
-import mongoose from "mongoose";
-
-const Likes = new mongoose.Schema({
+import mongoose, { Schema, Document, Model } from "mongoose";
+export interface ILikes extends Document {
+  user: Schema.Types.ObjectId;
+  post: Schema.Types.ObjectId;
+}
+const LikesSchema: Schema = new mongoose.Schema({
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
   },
   post: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Post",
   },
 });
-
-const LikesSchema = mongoose.model("Likes", Likes);
-
-export default LikesSchema;
+const LikesModel: Model<ILikes> = mongoose.model<ILikes>("Likes", LikesSchema);
+export default LikesModel;
