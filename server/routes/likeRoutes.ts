@@ -2,6 +2,7 @@ import express, { Request, Response, Router } from "express";
 import Likes from "../models/likes.js";
 import Post from "../models/post.js";
 import User from "../models/user.js";
+import mongoose, { Schema, Types } from "mongoose";
 import { routeHandler } from "../utils/routeUils.js";
 
 const router: Router = express.Router();
@@ -19,40 +20,60 @@ router.route("/:userId").get(async (req: Request, res: Response) => {
 router.route("/:userId/likeCount").get(async (req: Request, res: Response) => {
   await routeHandler(res, async () => {
     const { userId } = req.params;
-    const results = await User.aggregate([
+    // const results = await User.aggregate([
+    //   {
+    //     $match: {
+    //       _id: userId,
+    //     },
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: "posts",
+    //       localField: "_id",
+    //       foreignField: "author._id",
+    //       as: "posts",
+    //     },
+    //   },
+    //   {
+    //     $unwind: "$posts",
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: "likes",
+    //       localField: "posts._id",
+    //       foreignField: "post",
+    //       as: "likes",
+    //     },
+    //   },
+    //   {
+    //     $group: {
+    //       _id: "$_id",
+    //       username: { $first: "$username" },
+    //       numLikes: { $sum: { $size: "$likes" } },
+    //     },
+    //   },
+    // ]);
+    // Use the aggregate function to perform the join and aggregation
+    const result = await Post.aggregate([
       {
-        $match: {
-          _id: userId,
-        },
-      },
-      {
-        $lookup: {
-          from: "posts",
-          localField: "_id",
-          foreignField: "author",
-          as: "posts",
-        },
-      },
-      {
-        $unwind: "$posts",
+        $match: { author: new mongoose.Types.ObjectId(userId) },
       },
       {
         $lookup: {
           from: "likes",
-          localField: "posts._id",
+          localField: "_id",
           foreignField: "post",
           as: "likes",
         },
       },
       {
         $group: {
-          _id: "$_id",
-          username: { $first: "$username" },
-          numLikes: { $sum: { $size: "$likes" } },
+          _id: null,
+          totalLikes: { $sum: { $size: "$likes" } },
         },
       },
     ]);
-    res.status(200).json({ success: true, data: results[0].numLikes });
+    res.status(200).json({ success: true, data: result[0]?.totalLikes || 0 });
   });
 });
 

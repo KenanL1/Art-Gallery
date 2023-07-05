@@ -1,11 +1,12 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
+import { IUser } from "./user";
 export interface IAuth extends Document {
   _id: string;
   name: string;
   username: string;
   password: string;
   admin?: boolean;
-  profile?: Schema.Types.ObjectId;
+  profile?: IUser;
 }
 const AuthSchema: Schema = new mongoose.Schema({
   name: { type: String, required: true },

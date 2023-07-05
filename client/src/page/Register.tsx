@@ -7,6 +7,7 @@ const Register = () => {
   const [name, setName] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   // Submit form to register a new account
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -30,6 +31,8 @@ const Register = () => {
       const result = await response.json();
       if (result.success) {
         navigate("/login");
+      } else {
+        setError(result.message);
       }
     } catch (e) {
       alert(e);
@@ -54,6 +57,7 @@ const Register = () => {
   return (
     <div className="flex flex-col justify-start items-center">
       <h1>Register</h1>
+      {error.length > 0 && <span className="text-red-600 mb-2">{error}</span>}
       <form className="w-full max-w-md" onSubmit={handleSubmit}>
         <div className="flex items-center gap-2 mb-2">
           <label htmlFor="name">Name</label>

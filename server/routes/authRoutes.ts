@@ -57,7 +57,7 @@ router.route("/login").post(async (req: Request, res: Response) => {
           const token = issueJWT(user);
           res.status(200).json({
             success: true,
-            user: user.profile,
+            user: user.profile._id,
             username: user.username,
             token: token.token,
             expiresIn: token.expires,

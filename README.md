@@ -5,6 +5,7 @@ The platform is designed for users to create, upload, share, and discover AI-gen
 OpenAI and Stable Diffusion text-to-image API to generate one-of-a-kind images based on textual prompts, and users can follow others, "like" posts, and even download images to save them.
 
 This project is for my learning of React, Node, Tailwind, Redux, and Typescript
+[Demo](https://art-gallery-client-esmz7zszta-uc.a.run.app)
 
 ### Setup
 
