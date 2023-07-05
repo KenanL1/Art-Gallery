@@ -44,11 +44,13 @@ jobs:
             --build-arg CLOUDINARY_API_SECRET="${{ secrets.CLOUDINARY_API_SECRET }}" \
             --build-arg OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
             --build-arg MONGODB_URL="${{ secrets.MONGODB_URL }}" \
+            --file server/Dockerfile \
             -t kenanl1/art-gallery-server:latest .
           docker push kenanl1/art-gallery-server:latest
           docker build \
             --build-arg VITE_API_URL="${{ secrets.VITE_API_URL }}" \
             --build-arg VITE_HUGGINGFACE_KEY="${{ secrets.VITE_HUGGINGFACE_KEY }}" \
+            --file client/Dockerfile \
             -t kenanl1/art-gallery-client:latest .
           docker push kenanl1/art-gallery-client:latest
 
