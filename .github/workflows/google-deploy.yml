@@ -28,13 +28,13 @@ jobs:
         env:
           PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
         run: |
-          echo "$PUBLIC_KEY" > id_rsa_pub.pem
+          echo "$PUBLIC_KEY" > server/id_rsa_pub.pem
 
       - name: Create private key file
         env:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
         run: |
-          echo "$PRIVATE_KEY" > id_rsa_priv.pem
+          echo "$PRIVATE_KEY" > server/id_rsa_priv.pem
 
       - name: Build and Push Docker images
         run: |
