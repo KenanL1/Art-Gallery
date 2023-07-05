@@ -24,10 +24,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Go to server folder
-        run: |
-          cd server
-
       - name: Create public key file
         env:
           PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
@@ -42,20 +38,19 @@ jobs:
 
       - name: Build and Push Docker images
         run: |
+          cd server
           docker build \
             --build-arg CLOUDINARY_CLOUD_NAME="${{ secrets.CLOUDINARY_CLOUD_NAME }}" \
             --build-arg CLOUDINARY_API_KEY="${{ secrets.CLOUDINARY_API_KEY }}" \
             --build-arg CLOUDINARY_API_SECRET="${{ secrets.CLOUDINARY_API_SECRET }}" \
             --build-arg OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
             --build-arg MONGODB_URL="${{ secrets.MONGODB_URL }}" \
-            -f Dockerfile \
             -t kenanl1/art-gallery-server:latest .
           docker push kenanl1/art-gallery-server:latest
           cd ../client
           docker build \
             --build-arg VITE_API_URL="${{ secrets.VITE_API_URL }}" \
             --build-arg VITE_HUGGINGFACE_KEY="${{ secrets.VITE_HUGGINGFACE_KEY }}" \
-            -f Dockerfile \
             -t kenanl1/art-gallery-client:latest .
           docker push kenanl1/art-gallery-client:latest
           cd ..
