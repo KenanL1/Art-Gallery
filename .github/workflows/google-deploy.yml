@@ -1,0 +1,85 @@
+name: Deploy to Google Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    # Add 'id-token' with the intended permissions for workload identity federation
+    permissions:
+      contents: "read"
+      id-token: "write"
+    environment: demo
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Create public key file
+      env:
+        PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
+      run: |
+        echo "$PUBLIC_KEY" > id_rsa_pub.pem
+
+      - name: Create private key file
+      env:
+        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      run: |
+        echo "$PRIVATE_KEY" > id_rsa_priv.pem
+
+      - name: Build Docker art gallery server image
+        run: |
+          docker build \
+            --build-arg CLOUDINARY_CLOUD_NAME="${{ secrets.CLOUDINARY_CLOUD_NAME }}" \
+            --build-arg CLOUDINARY_API_KEY="${{ secrets.CLOUDINARY_API_KEY }}" \
+            --build-arg CLOUDINARY_API_SECRET="${{ secrets.CLOUDINARY_API_SECRET }}" \
+            --build-arg OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
+            --build-arg MONGODB_URL="${{ secrets.MONGODB_URL }}" \
+            -t kenanl1/art-gallery-server:latest .
+
+      - name: Push Docker image
+        run: docker push kenanl1/art-gallery-server:latest
+
+      - name: Build Docker art gallery client image
+        run: |
+          docker build \
+            --build-arg VITE_API_URL="${{ secrets.VITE_API_URL }}" \
+            --build-arg VITE_HUGGINGFACE_KEY="${{ secrets.VITE_HUGGINGFACE_KEY }}" \
+            -t kenanl1/art-gallery-client:latest .
+
+      - name: Push Docker image
+        run: docker push kenanl1/art-gallery-client:latest
+
+      - name: Google Auth
+        id: auth
+        uses: "google-github-actions/auth@v0"
+        with:
+          workload_identity_provider: "${{ secrets.WIF_PROVIDER }}" # e.g. - projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider
+          service_account: "${{ secrets.WIF_SERVICE_ACCOUNT }}" # e.g. - my-service-account@my-project.iam.gserviceaccount.com
+
+      - name: Deploy server to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v0
+        with:
+          service: ${{ secrets.SERVICE }}
+          image: kenanl1/art-gallery-server:latest
+
+      - name: Deploy client to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v0
+        with:
+          service: ${{ secrets.SERVICE }}
+          image: kenanl1/art-gallery-client:latest
+
+      # If required, use the Cloud Run url output in later steps
+      - name: Show Output
+        run: echo ${{ steps.deploy.outputs.url }}

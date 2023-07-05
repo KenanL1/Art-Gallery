@@ -19,7 +19,7 @@ const Profile = () => {
   const getFollowingCount = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/users/${user}/followingCount`,
+        `${import.meta.env.VITE_API_URL}/api/v1/users/${user}/followingCount`,
         {
           method: "GET",
           headers: {
@@ -40,7 +40,7 @@ const Profile = () => {
   const getFollowerCount = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/users/${user}/followerCount`,
+        `${import.meta.env.VITE_API_URL}/api/v1/users/${user}/followerCount`,
         {
           method: "GET",
           headers: {
@@ -61,7 +61,7 @@ const Profile = () => {
   const getLikesCount = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/likes/${user}/likeCount`,
+        `${import.meta.env.VITE_API_URL}/api/v1/likes/${user}/likeCount`,
         {
           method: "GET",
           headers: {
@@ -83,7 +83,7 @@ const Profile = () => {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:5000/api/v1/user/${user}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/user/${user}`,
         {
           method: "GET",
           headers: {
@@ -110,7 +110,7 @@ const Profile = () => {
   const fetchPostFromUser = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/post/userPost/${user}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/post/userPost/${user}`,
         {
           method: "GET",
           headers: {
@@ -131,7 +131,7 @@ const Profile = () => {
   const fetchLikedPost = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/likes/${user}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/likes/${user}`,
         {
           method: "GET",
           headers: {

@@ -51,7 +51,7 @@ const CreatePost = () => {
     let url = "";
     let body = {};
     if (model === AIModel.OpenAI) {
-      url = "http://localhost:5000/api/v1/dalle";
+      url = import.meta.env.VITE_API_URL + "/api/v1/dalle";
       body = {
         prompt: form.prompt,
         // n: form.numImages,
@@ -102,13 +102,16 @@ const CreatePost = () => {
     if (_form.prompt && _form.photo) {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:5000/api/v1/post", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ..._form }),
-        });
+        const response = await fetch(
+          import.meta.env.VITE_API_URL + "/api/v1/post",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ ..._form }),
+          }
+        );
 
         await response.json();
         alert("Success");

@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+
+  client:
+    image: kenanl1/art-gallery-client # Specify the desired repository name
+    build:
+      context: ./client
+      dockerfile: ./Dockerfile
+    networks:
+      - gallery
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+
+  server:
+    image: kenanl1/art-gallery-server # Specify the desired repository name
+    build:
+      context: ./server
+      dockerfile: ./Dockerfile
+    networks:
+      - gallery
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./id_rsa_pub.pem:/id_rsa_pub.pem
+      - ./id_rsa_priv.pem:/id_rsa_priv.pem
+
+networks:
+  gallery:
+    driver: bridge
+
+volumes:
+  id_rsa_pub.pem:
+  id_rsa_priv.pem:
