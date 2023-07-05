@@ -24,6 +24,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Go to server folder
+        run: |
+          cd server
+
       - name: Create public key file
         env:
           PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
@@ -47,12 +51,14 @@ jobs:
             --file server/Dockerfile \
             -t kenanl1/art-gallery-server:latest .
           docker push kenanl1/art-gallery-server:latest
+          cd ../client
           docker build \
             --build-arg VITE_API_URL="${{ secrets.VITE_API_URL }}" \
             --build-arg VITE_HUGGINGFACE_KEY="${{ secrets.VITE_HUGGINGFACE_KEY }}" \
             --file client/Dockerfile \
             -t kenanl1/art-gallery-client:latest .
           docker push kenanl1/art-gallery-client:latest
+          cd ..
 
       - name: Google Auth
         id: auth

@@ -16,11 +16,11 @@ ENV OPENAI_API_KEY=$OPENAI_API_KEY
 ARG MONGODB_URL
 ENV MONGODB_URL=$MONGODB_URL
 
-COPY id_rsa_pub.pem id_rsa_pub.pem
-COPY id_rsa_priv.pem id_rsa_priv.pem
-
 # Set working directory
 WORKDIR /server
+
+COPY id_rsa_pub.pem ./
+COPY id_rsa_priv.pem ./
 
 # Install app dependencies
 COPY package*.json ./
