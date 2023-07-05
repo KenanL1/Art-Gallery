@@ -25,16 +25,16 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Create public key file
-      env:
-        PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
-      run: |
-        echo "$PUBLIC_KEY" > id_rsa_pub.pem
+        env:
+          PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
+        run: |
+          echo "$PUBLIC_KEY" > id_rsa_pub.pem
 
       - name: Create private key file
-      env:
-        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-      run: |
-        echo "$PRIVATE_KEY" > id_rsa_priv.pem
+        env:
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+        run: |
+          echo "$PRIVATE_KEY" > id_rsa_priv.pem
 
       - name: Build and Push Docker images
         run: |
