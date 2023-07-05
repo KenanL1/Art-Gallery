@@ -22,7 +22,7 @@ export const openModel = createAsyncThunk(
   async (postId: string) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/post/${postId}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/post/${postId}`,
         {
           method: "GET",
           headers: {

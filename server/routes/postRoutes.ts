@@ -2,6 +2,7 @@ import express, { Request, Response, Router } from "express";
 import * as dotenv from "dotenv";
 import { v2 as cloudinary } from "cloudinary";
 import Post, { IPost } from "../models/post.js";
+import Likes, { ILikes } from "../models/likes.js";
 import User, { IUser } from "../models/user.js";
 import { routeHandler } from "../utils/routeUils.js";
 
@@ -65,6 +66,7 @@ router.route("/").delete(async (req: Request, res: Response) => {
     const { _id, photo_id } = req.body;
     await cloudinary.uploader.destroy(photo_id);
     await Post.deleteOne({ _id: _id });
+    await Likes.deleteMany({ post_id: _id });
     res.status(200).json({ success: true });
   });
 });

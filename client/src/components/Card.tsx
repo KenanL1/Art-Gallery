@@ -29,7 +29,7 @@ const Card = ({ _id, name, prompt, photo, photo_id, model }: CardType) => {
     try {
       e.preventDefault();
       e.stopPropagation();
-      await fetch("http://localhost:5000/api/v1/post", {
+      await fetch(import.meta.env.VITE_API_URL + "/api/v1/post", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

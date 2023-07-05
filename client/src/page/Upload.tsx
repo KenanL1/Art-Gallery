@@ -26,18 +26,21 @@ function Upload() {
         reader.readAsDataURL(image);
         reader.onloadend = async () => {
           console.log("RESULT", reader.result);
-          const response = await fetch("http://localhost:5000/api/v1/post", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              name: username,
-              photo: reader.result,
-              prompt: image.name,
-              model: "upload",
-            }),
-          });
+          const response = await fetch(
+            import.meta.env.VITE_API_URL + "/api/v1/post",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                name: username,
+                photo: reader.result,
+                prompt: image.name,
+                model: "upload",
+              }),
+            }
+          );
           await response.json();
           alert("Success");
           navigate("/");

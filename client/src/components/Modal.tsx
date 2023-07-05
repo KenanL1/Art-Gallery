@@ -34,7 +34,9 @@ const Modal = () => {
       e.stopPropagation();
       const path = isFollowed ? "unfollow" : "follow";
       const response = await fetch(
-        `http://localhost:5000/api/v1/users/${user}/${path}/${post.author._id}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/users/${user}/${path}/${
+          post.author._id
+        }`,
         {
           method: "POST",
           headers: {
@@ -54,7 +56,9 @@ const Modal = () => {
   const isFollowing = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/users/${user}/following/${post.author._id}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/users/${user}/following/${
+          post.author._id
+        }`,
         {
           method: "GET",
           headers: {
@@ -76,7 +80,7 @@ const Modal = () => {
     e.stopPropagation();
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/likes/${user}/${post._id}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/likes/${user}/${post._id}`,
         {
           method: isLiked ? "DELETE" : "POST",
           headers: {
@@ -96,7 +100,7 @@ const Modal = () => {
   const isPostLiked = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/likes/${user}/${post._id}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/likes/${user}/${post._id}`,
         {
           method: "GET",
           headers: {
