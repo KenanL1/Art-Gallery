@@ -66,15 +66,17 @@ jobs:
         id: deploy-server
         uses: google-github-actions/deploy-cloudrun@v0
         with:
-          service: ${{ secrets.SERVICE }}
+          service: art-gallery-server
           image: kenanl1/art-gallery-server:latest
+          args: --port=5000
 
       - name: Deploy client to Cloud Run
         id: deploy-client
         uses: google-github-actions/deploy-cloudrun@v0
         with:
-          service: ${{ secrets.SERVICE }}
+          service: art-gallery-client
           image: kenanl1/art-gallery-client:latest
+          args: --port=3000
 
       # If required, use the Cloud Run url output in later steps
       - name: Show Output
