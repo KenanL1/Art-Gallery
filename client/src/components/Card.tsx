@@ -1,9 +1,11 @@
 import React from "react";
+import { useMutation } from "@tanstack/react-query";
 
 import { download, remove } from "../assets";
 import { downloadImage } from "../utils";
 import { useAppDispatch } from "../store";
-import { openModel } from "../store/Reducers/modalSlice";
+import { deletePost } from "../api/post";
+import { openModal } from "../store/Reducers/modalSlice";
 
 export interface CardType {
   _id: string;
@@ -16,74 +18,61 @@ export interface CardType {
   size?: number;
   numImages?: number | undefined;
   steps?: number | undefined;
+  author?: any;
 }
 
 const Card = ({ _id, name, prompt, photo, photo_id, model }: CardType) => {
   const dispatch = useAppDispatch();
 
-  const deletePost = async (
+  const deletePostMutation = useMutation(deletePost);
+
+  const handleDelete = async (
     e: React.SyntheticEvent,
-    _id: string | undefined,
+    _id: string,
     photo_id: string
   ) => {
-    try {
-      e.preventDefault();
-      e.stopPropagation();
-      await fetch(import.meta.env.VITE_API_URL + "/api/v1/post", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ _id: _id, photo_id: photo_id }),
-      });
-      window.location.reload();
-    } catch (e) {
-      alert(e);
-    }
+    e.preventDefault();
+    e.stopPropagation();
+    await deletePostMutation.mutateAsync({ _id, photo_id });
+    window.location.reload();
   };
   const openPost = (e: React.MouseEvent) => {
-    dispatch(openModel(_id));
+    dispatch(openModal(_id));
   };
 
   return (
-    <div>
-      <div
-        onClick={openPost}
-        className="rounded-xl group relative shadow-card hover:shadow-cardhover card "
-      >
-        <div className="h-0 overflow-hidden" style={{ paddingBottom: "100%" }}>
-          <img
-            className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
-            src={photo}
-            alt={prompt}
-          />
-        </div>
-        <div className="group-hover:flex flex-col max-h-[94.5%] hidden absolute bottom-0 left-0 right-0 bg-[#10131f] m-2 p-4 rounded-md">
-          <p className="text-white text-sm overflow-y-auto prompt">{prompt}</p>
-          <div className="mt-5 flex justify-between items-center gap-2">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full object-cover bg-green-700 flex justify-center items-center text-white text-xs font-bold">
-                {name && name[0]}
-              </div>
-              <p className="text-white text-sm">{name}</p>
+    <>
+      <div onClick={openPost} className="relative overflow-hidden post">
+        <img
+          className="h-auto w-full rounded-lg break-inside-avoid"
+          src={photo}
+          alt={prompt}
+        />
+        <div className="flex flex-col justify-between items-be absolute inset-0 bg-black bg-opacity-50 text-white opacity-0 transition duration-500 ease-in-out hover:opacity-100">
+          <div className="m-4 flex items-center gap-2">
+            <div className="w-7 h-7 rounded-full bg-green-700 flex justify-center items-center text-white text-xs font-bold">
+              {name && name[0]}
             </div>
-            <div>
-              <button
-                type="button"
-                onClick={(e) => deletePost(e, _id, photo_id)}
-                className="outline-none bg-transparent border-none"
-              >
-                <img
-                  src={remove}
-                  alt="remove"
-                  className="w-6 h-6 object-contain invert"
-                />
-              </button>
-            </div>
+            <p className="text-white text-sm">{name}</p>
+          </div>
+          <div className="m-4 flex justify-between">
+            <p className="text-white text-sm overflow-y-auto">{prompt}</p>
+            <button
+              type="button"
+              onClick={(e) => handleDelete(e, _id, photo_id)}
+              className="outline-none bg-transparent border-none"
+            >
+              <img
+                src={remove}
+                alt="remove"
+                className="w-6 h-6 object-contain invert"
+                title="remove"
+              />
+            </button>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

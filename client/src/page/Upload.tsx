@@ -1,13 +1,23 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppSelector } from "../store";
 import { selectUsername } from "../store/Reducers/authSlice";
+import { uploadImage } from "../api/post";
 
 function Upload() {
   const [image, setImage] = useState<File | null>(null);
   const username = useAppSelector(selectUsername);
 
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const uploadMutation = useMutation(uploadImage, {
+    onSuccess: (data) => {
+      queryClient.setQueryData(["posts", data.id], data);
+      queryClient.invalidateQueries(["posts"], { exact: true });
+    },
+  });
 
   const handleFileInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -19,35 +29,10 @@ function Upload() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // handle file upload
-    try {
-      if (image) {
-        const reader = new FileReader();
-        reader.readAsDataURL(image);
-        reader.onloadend = async () => {
-          console.log("RESULT", reader.result);
-          const response = await fetch(
-            import.meta.env.VITE_API_URL + "/api/v1/post",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                name: username,
-                photo: reader.result,
-                prompt: image.name,
-                model: "upload",
-              }),
-            }
-          );
-          await response.json();
-          alert("Success");
-          navigate("/");
-        };
-      }
-    } catch (err) {
-      alert(err);
+    const data = await uploadMutation.mutateAsync({ image, username });
+    if (data) {
+      alert("Success");
+      navigate("/");
     }
   };
 

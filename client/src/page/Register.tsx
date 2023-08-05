@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { createUser } from "../api/auth";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -9,34 +11,23 @@ const Register = () => {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
 
+  const registerMutation = useMutation(createUser, {
+    onSuccess: () => {
+      navigate("/login");
+    },
+    onError: (err: Error) => {
+      setError(err.message);
+    },
+  });
+
   // Submit form to register a new account
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await fetch(
-        import.meta.env.VITE_API_URL + "/api/v1/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: name,
-            username: username,
-            password: password,
-          }),
-        }
-      );
-
-      const result = await response.json();
-      if (result.success) {
-        navigate("/login");
-      } else {
-        setError(result.message);
-      }
-    } catch (e) {
-      alert(e);
-    }
+    await registerMutation.mutateAsync({
+      name: name,
+      username: username,
+      password: password,
+    });
   };
 
   // Handle input changes

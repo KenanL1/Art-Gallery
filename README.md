@@ -44,6 +44,7 @@ You can access the website by going to http://localhost:3000/
 - Vite
 - Passport (Authentication)
 - Docker (Container)
+- Selenium (End-to-end testing)
 
 To build our application, we chose to use the **MERN stack**, which consists of **MongoDB, Express.js, React, and Node.js**. This allowed us to use a unified set of technologies (JS/TS) for both the frontend and backend, streamlining development and reducing the complexity of the application architecture. By building a **Single Page Application (SPA)**, we were able to take advantage of reusable components, which increased efficiency and reduced development time. SPAs load only once and dynamically update content through **client-side rendering**, paired with React's virtual DOM results in a faster and more responsive applicatitons that is both engaging and seamless.
 

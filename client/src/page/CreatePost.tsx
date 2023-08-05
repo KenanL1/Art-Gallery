@@ -1,24 +1,22 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { preview } from "../assets";
 import { getRandomPrompt } from "../utils";
 import { FormField, Loader } from "../components";
 import { CardType } from "../components/Card";
-import { selectUser, selectUsername } from "../store/Reducers/authSlice";
+import { selectUsername } from "../store/Reducers/authSlice";
 import { useAppSelector } from "../store";
-import { blobToBase64 } from "../utils";
+import { generateImage, createPost } from "../api/post";
+import AIModel from "../enum/AIModel";
 
 const CreatePost = () => {
-  enum AIModel {
-    OpenAI = "OPENAI",
-    SD = "SD",
-  }
-
   const navigate = useNavigate();
   const sizeOptions = [256, 512, 1024];
   const numImageOptions = [1, 2, 3, 4];
   const username = useAppSelector(selectUsername);
+  const queryClient = useQueryClient();
 
   const [form, setForm] = useState<CardType>({
     _id: "",
@@ -33,11 +31,22 @@ const CreatePost = () => {
     model: "",
   });
 
-  const [generatingImg, setGeneratingImg] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
   const [model, setModel] = useState<AIModel>(AIModel.SD);
   const [size, setSize] = useState<number>(512);
   const [numImages, setNumImages] = useState<number>(1);
+
+  const generateImgMutation = useMutation({
+    mutationFn: generateImage,
+  });
+  const createPostMutation = useMutation({
+    mutationFn: createPost,
+    onSuccess: (data) => {
+      queryClient.setQueryData(["posts", data.id], data);
+      queryClient.invalidateQueries(["posts"], { exact: true });
+      alert("Success");
+      navigate("/");
+    },
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -47,80 +56,19 @@ const CreatePost = () => {
     setForm({ ...form, prompt: randomPrompt });
   };
 
-  const generateImage = async (e: React.BaseSyntheticEvent) => {
-    let url = "";
-    let body = {};
-    if (model === AIModel.OpenAI) {
-      url = import.meta.env.VITE_API_URL + "/api/v1/dalle";
-      body = {
-        prompt: form.prompt,
-        // n: form.numImages,
-      };
-    } else {
-      url =
-        "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5";
-      body = {
-        inputs: form.prompt,
-        // guidance_scale: form.guidance_scale,
-        // steps: form.steps,
-        // seed: -1,
-      };
-    }
-    if (form.prompt) {
-      try {
-        setGeneratingImg(true);
-        const response = await fetch(url, {
-          method: "POST",
-          headers: {
-            Authorization: import.meta.env.VITE_HUGGINGFACE_KEY,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        });
-
-        const data =
-          model == AIModel.OpenAI
-            ? await response.json()
-            : await response.blob();
-        const img =
-          model == AIModel.OpenAI
-            ? `data:image/jpeg;base64,${data.photo}`
-            : await blobToBase64(data);
-        setForm({ ...form, photo: img });
-        handleSubmit({ ...form, photo: img, model: model });
-      } catch (err) {
-        alert(err);
-      } finally {
-        setGeneratingImg(false);
-      }
-    } else {
-      alert("Please provide proper prompt");
-    }
-  };
-
-  const handleSubmit = async (_form: CardType) => {
-    if (_form.prompt && _form.photo) {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          import.meta.env.VITE_API_URL + "/api/v1/post",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ ..._form }),
-          }
-        );
-
-        await response.json();
-        alert("Success");
-        navigate("/");
-      } catch (err) {
-        alert(err);
-      } finally {
-        setLoading(false);
-      }
+  const handleSubmit = async (e: React.BaseSyntheticEvent) => {
+    e.preventDefault();
+    const photo = await generateImgMutation.mutateAsync({
+      prompt: form.prompt,
+      model: model,
+    });
+    if (photo) {
+      setForm({ ...form, photo: photo });
+      await createPostMutation.mutateAsync({
+        ...form,
+        photo: photo,
+        model: model,
+      });
     }
   };
 
@@ -242,7 +190,7 @@ const CreatePost = () => {
               />
             )}
 
-            {generatingImg && (
+            {generateImgMutation.isLoading && (
               <div className="absolute inset-0 z-0 flex justify-center items-center bg-[rgba(0,0,0,0.5)] rounded-lg">
                 <Loader />
               </div>
@@ -252,11 +200,15 @@ const CreatePost = () => {
 
         <div className="mt-5 flex gap-5">
           <button
+            id="generateBtn"
             type="button"
-            onClick={generateImage}
-            className="dark:text-white bg-green-600 hover:bg-green-700"
+            onClick={handleSubmit}
+            className={`dark:text-white bg-green-600 hover:bg-green-700 ${
+              !form.prompt ? "opacity-50 pointer-events-none" : "opacity-100"
+            }`}
+            disabled={!form.prompt}
           >
-            {generatingImg ? "Generating..." : "Generate"}
+            {generateImgMutation.isLoading ? "Generating..." : "Generate"}
           </button>
         </div>
       </form>

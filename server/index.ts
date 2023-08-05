@@ -2,6 +2,7 @@ import express, { Application } from "express";
 import * as dotenv from "dotenv";
 import cors from "cors";
 import passport from "passport";
+import "express-async-errors"; // Handle errors
 
 import initializePassport from "./authentication/passport.js";
 
@@ -41,6 +42,14 @@ app.use("/api/v1/post", postRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/users", followerRoutes);
 app.use("/api/v1/likes", likeRoutes);
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.status(err.statusCode || 500).json({
+    success: false,
+    message: err.message,
+  });
+});
 
 // Can only create when authenticated
 app.use(

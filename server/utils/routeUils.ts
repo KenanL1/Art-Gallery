@@ -3,9 +3,10 @@ export const routeHandler = async (res, successCallback: () => void) => {
   try {
     await successCallback();
   } catch (err) {
-    res.status(500).json({
+    console.log(err);
+    res.status(err.statusCode || 500).json({
       success: false,
-      message: err,
+      message: err.message,
     });
   }
 };

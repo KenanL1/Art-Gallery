@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 import { useAppDispatch } from "../store";
 import { login } from "../store/Reducers/authSlice";
+import { authUser } from "../api/auth";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -9,6 +11,13 @@ const Login = () => {
 
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const loginMutation = useMutation(authUser, {
+    onSuccess: (data) => {
+      dispatch(login({ ...data }));
+      navigate("/");
+    },
+  });
 
   // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,27 +34,7 @@ const Login = () => {
   // Send a request to login
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await fetch(
-        import.meta.env.VITE_API_URL + "/api/v1/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ username: username, password: password }),
-        }
-      );
-
-      const result = await response.json();
-
-      if (result.success) {
-        dispatch(login({ ...result }));
-        navigate("/");
-      }
-    } catch (e) {
-      alert(e);
-    }
+    loginMutation.mutateAsync({ username: username, password: password });
   };
 
   return (

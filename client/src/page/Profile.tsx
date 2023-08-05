@@ -1,151 +1,72 @@
 import { useState, useEffect } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAppSelector } from "../store";
-import { selectPost } from "../store/Reducers/postSlice";
+// import { selectPost } from "../store/Reducers/postSlice";
+import { getPosts } from "../api/post";
+import { CardType } from "../components/Card";
+import {
+  getFollowerCount,
+  getFollowingCount,
+  getLikesCount,
+  getProfile,
+} from "../api/profile";
+import { getPostFromUser, getLikedPosts } from "../api/post";
 import { useParams } from "react-router-dom";
-import CardList from "../components/CardList";
+import MasonryLayout from "../components/MasonryLayout";
 
 const Profile = () => {
   const { user } = useParams();
-  const allPost = useAppSelector(selectPost);
-  const [sortBy, setSortBy] = useState<string>("newest");
-  const [profile, setProfile] = useState<any>({});
-  const [loading, setLoading] = useState<boolean>(true);
-  const [following, setFollowing] = useState<number>(0);
-  const [followers, setFollowers] = useState<number>(0);
-  const [likes, setLikes] = useState<number>(0);
+  const [sortBy, setSortBy] = useState<string>("oldest");
+  const [postType, setPostType] = useState<number>(1);
   const [posts, setPosts] = useState<any>();
 
-  // Get the users number of following
-  const getFollowingCount = async () => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v1/users/${user}/followingCount`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.ok) {
-        const result = await response.json();
-        setFollowing(result.data);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const queryClient = useQueryClient();
 
-  // Get the users number of followers
-  const getFollowerCount = async () => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v1/users/${user}/followerCount`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.ok) {
-        const result = await response.json();
-        setFollowers(result.data);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const { data: profile, isLoading: isProfileLoading } = useQuery({
+    queryKey: ["profile", user],
+    queryFn: () => getProfile(user),
+  });
 
-  // Get the users number of likes recieved
-  const getLikesCount = async () => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v1/likes/${user}/likeCount`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.ok) {
-        const result = await response.json();
-        setLikes(result.data);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const { data: following, isLoading: isFollowingLoading } = useQuery({
+    queryKey: ["following", user],
+    queryFn: () => getFollowingCount(user),
+  });
 
-  // Get users profile information
-  const fetchProfile = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v1/user/${user}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.ok) {
-        const result = await response.json();
-        setProfile(result.data);
-      }
-      getFollowerCount();
-      getFollowingCount();
-      getLikesCount();
-      fetchPostFromUser();
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: followers, isLoading: isFollowersLoading } = useQuery({
+    queryKey: ["followers", user],
+    queryFn: () => getFollowerCount(user),
+  });
 
-  // Get posts made from user
-  const fetchPostFromUser = async () => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v1/post/userPost/${user}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.ok) {
-        const result = await response.json();
-        setPosts(result.data.reverse());
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const { data: likes, isLoading: isLikesLoading } = useQuery({
+    queryKey: ["likes", user],
+    queryFn: () => getLikesCount(user),
+  });
 
-  // Get the post liked by the user
-  const fetchLikedPost = async () => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v1/likes/${user}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.ok) {
-        const result = await response.json();
-        setPosts(result.data.reverse().map((p: any) => p.post));
-      }
-    } catch (e) {
-      console.error(e);
-    }
+  const userPost = useQuery({
+    queryKey: ["userPost", user],
+    queryFn: () => getPostFromUser(user),
+    onSuccess: (data) => {
+      setPosts(data);
+    },
+  });
+
+  const likedPost = useQuery({
+    enabled: false,
+    queryKey: ["likedPost", user],
+    queryFn: () => getLikedPosts(user),
+    onSuccess: (data) => {
+      setPosts(data);
+    },
+  });
+
+  // Change posts type
+  // 1 - User Post
+  // 2 - User liked post
+  const changePostType = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const type = Number(e.currentTarget.getAttribute("data-post-type"));
+    setPostType(type);
+    type == 1 ? userPost.refetch() : likedPost.refetch();
+    // setPosts(type == 1 ? userPost.data : likedPost.data);
   };
 
   // Sort post by newest
@@ -185,13 +106,16 @@ const Profile = () => {
     }
   };
 
-  useEffect(() => {
-    fetchProfile();
-  }, []);
+  // useEffect(() => {
+  //   setPosts(postType == 1 ? userPost : likedPost);
+  // }, [postType]);
 
   return (
     <>
-      {!loading ? (
+      {!isProfileLoading &&
+      !isFollowersLoading &&
+      !isFollowingLoading &&
+      !isLikesLoading ? (
         <div>
           <div className="flex flex-col w-full p-5 bg-gray-600">
             <h2 className="font-semibold text-white text-3xl text-start">
@@ -206,14 +130,18 @@ const Profile = () => {
           <div className="flex py-2 justify-between">
             <div className="flex gap-4 p-2">
               <button
+                id="my-images"
+                data-post-type="1"
                 className="focus:bg-gray-500 bg-gray-400 p-1 rounded-md"
-                onClick={fetchPostFromUser}
+                onClick={changePostType}
               >
                 My Images
               </button>
               <button
+                id="my-likes"
+                data-post-type="2"
                 className="focus:bg-gray-500 bg-gray-400 rounded-md p-1"
-                onClick={fetchLikedPost}
+                onClick={changePostType}
               >
                 My Likes
               </button>
@@ -226,10 +154,15 @@ const Profile = () => {
               </select>
             </div>
           </div>
-          <CardList data={posts} title="No Post" />
+          {(postType == 1 && !userPost.isLoading) ||
+          (postType == 2 && !likedPost.isLoading) ? (
+            <MasonryLayout data={posts} title="No Post" />
+          ) : (
+            <div>Loading...</div>
+          )}
         </div>
       ) : (
-        <div></div>
+        <div>Loading...</div>
       )}
     </>
   );

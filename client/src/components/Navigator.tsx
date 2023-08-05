@@ -57,6 +57,7 @@ const Navigator = () => {
           role="button"
           className="block px-4 py-2 w-full text-gray-800 hover:bg-blue-500 hover:text-white"
           onClick={clickHandler}
+          id={name}
         >
           {name}
         </a>
@@ -68,11 +69,15 @@ const Navigator = () => {
         <button
           onClick={toggleDropdown}
           className=" bg-green-700 hover:bg-green-900 dark:text-white"
+          id="avatar"
         >
           {username && username[0].toUpperCase()}
         </button>
         {isOpen && (
-          <div className="absolute right-0 origin-top-right mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-10">
+          <div
+            className="absolute right-0 origin-top-right mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-10"
+            id="user-menu"
+          >
             {/* Dropdown content */}
             <MenuItem name="Upload" clickHandler={handleGoToUpload} />
             <MenuItem name="Profile" clickHandler={handleGoToProfile} />
@@ -107,6 +112,7 @@ const Navigator = () => {
             <Link
               to="/create"
               className="font-inter font-medium bg-purple-600 hover:bg-purple-800 text-white px-4 py-2 rounded-md ml-3"
+              id="createBtn"
             >
               Create
             </Link>
@@ -115,6 +121,7 @@ const Navigator = () => {
           <Link
             to="/login"
             className="font-inter font-medium bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded-md"
+            id="loginBtn"
           >
             Login
           </Link>
