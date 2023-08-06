@@ -42,7 +42,10 @@ const Card = ({ _id, name, prompt, photo, photo_id, model }: CardType) => {
 
   return (
     <>
-      <div onClick={openPost} className="relative overflow-hidden post">
+      <div
+        onClick={openPost}
+        className="relative overflow-hidden post cursor-pointer"
+      >
         <img
           className="h-auto w-full rounded-lg break-inside-avoid"
           src={photo}

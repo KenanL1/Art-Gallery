@@ -106,9 +106,9 @@ const Profile = () => {
     }
   };
 
-  // useEffect(() => {
-  //   setPosts(postType == 1 ? userPost : likedPost);
-  // }, [postType]);
+  useEffect(() => {
+    setPosts(postType == 1 ? userPost.data : likedPost.data);
+  }, []);
 
   return (
     <>
@@ -132,7 +132,9 @@ const Profile = () => {
               <button
                 id="my-images"
                 data-post-type="1"
-                className="focus:bg-gray-500 bg-gray-400 p-1 rounded-md"
+                className={`${
+                  postType == 1 ? "bg-gray-200" : "bg-gray-500"
+                } p-1 rounded-md`}
                 onClick={changePostType}
               >
                 My Images
@@ -140,7 +142,9 @@ const Profile = () => {
               <button
                 id="my-likes"
                 data-post-type="2"
-                className="focus:bg-gray-500 bg-gray-400 rounded-md p-1"
+                className={`${
+                  postType == 2 ? "bg-gray-200" : "bg-gray-500"
+                } rounded-md p-1`}
                 onClick={changePostType}
               >
                 My Likes

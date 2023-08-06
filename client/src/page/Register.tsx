@@ -86,7 +86,14 @@ const Register = () => {
           ></input>
         </div>
         <div className="flex justify-center">
-          <button className="bg-blue-500 hover:bg-blue-700" type="submit">
+          <button
+            className={`bg-blue-500 hover:bg-blue-700 ${
+              !(name && username && password)
+                ? "opacity-50 pointer-events-none"
+                : "opacity-100"
+            }`}
+            type="submit"
+          >
             Register
           </button>
         </div>
