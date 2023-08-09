@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { createUser } from "../api/auth";
+import { AxiosError } from "axios";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -9,14 +10,10 @@ const Register = () => {
   const [name, setName] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<string>("");
 
-  const registerMutation = useMutation(createUser, {
+  const registerMutation = useMutation<any, any, any>(createUser, {
     onSuccess: () => {
       navigate("/login");
-    },
-    onError: (err: Error) => {
-      setError(err.message);
     },
   });
 
@@ -48,7 +45,11 @@ const Register = () => {
   return (
     <div className="flex flex-col justify-start items-center">
       <h1>Register</h1>
-      {error.length > 0 && <span className="text-red-600 mb-2">{error}</span>}
+      {registerMutation.isError && (
+        <span className="text-red-600 mb-2">
+          {registerMutation.error.response?.data?.msg}
+        </span>
+      )}
       <form className="w-full max-w-md" onSubmit={handleSubmit}>
         <div className="flex items-center gap-2 mb-2">
           <label htmlFor="name">Name</label>

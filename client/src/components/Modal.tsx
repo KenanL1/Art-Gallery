@@ -35,6 +35,7 @@ const Modal = () => {
   const likePostMutation = useMutation(likePost, {
     onSuccess: (data) => {
       queryClient.setQueryData(["isLiked", user, postId], !isLiked);
+      queryClient.invalidateQueries(["likes", user], { exact: true });
     },
   });
   const followUserMutation = useMutation(followUser, {
@@ -42,6 +43,13 @@ const Modal = () => {
       queryClient.setQueryData(
         ["isFollowed", user, post?.author?._id],
         !isFollowed
+      );
+      queryClient.invalidateQueries(
+        [
+          ["followers", user],
+          ["following", user],
+        ],
+        { exact: true }
       );
     },
   });

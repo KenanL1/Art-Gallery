@@ -12,7 +12,7 @@ router.route("/register").post(async (req: Request, res: Response) => {
     });
     if (user) {
       res.status(400).json({
-        message: `Account with username ${user.username} already exists`,
+        mag: `Account with username ${user.username} already exists`,
       });
     } else {
       const hashPassword: string = await bcrypt.hash(req.body.password, 10);

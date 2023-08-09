@@ -12,11 +12,14 @@ function Upload() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const uploadMutation = useMutation(uploadImage, {
+  const uploadMutation = useMutation<any, any, any>(uploadImage, {
     onSuccess: (data) => {
       queryClient.setQueryData(["posts", data.id], data);
       queryClient.invalidateQueries(["posts"], { exact: true });
     },
+    // onError: (err) => {
+    //   console.log(err);
+    // },
   });
 
   const handleFileInputChange = (
@@ -39,6 +42,11 @@ function Upload() {
   return (
     <div className="container mx-auto mt-10">
       <h1 className="text-2xl font-bold mb-4">Upload an Image</h1>
+      {uploadMutation.isError && (
+        <span className="text-red-600 mb-2">
+          {uploadMutation?.error?.response?.data?.message}
+        </span>
+      )}
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col mb-4">
           <label htmlFor="file-input" className="mb-2 font-bold text-lg">

@@ -43,7 +43,7 @@ export const authUser = async ({
       headers: {
         "Content-Type": "application/json",
       },
-      data: JSON.stringify({ username: username, password: password }),
+      data: { username: username, password: password },
     }
   );
 

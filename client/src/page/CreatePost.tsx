@@ -10,6 +10,7 @@ import { selectUsername } from "../store/Reducers/authSlice";
 import { useAppSelector } from "../store";
 import { generateImage, createPost } from "../api/post";
 import AIModel from "../enum/AIModel";
+import { AxiosError } from "axios";
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ const CreatePost = () => {
   const generateImgMutation = useMutation({
     mutationFn: generateImage,
   });
-  const createPostMutation = useMutation({
+  const createPostMutation = useMutation<any, any, any>({
     mutationFn: createPost,
     onSuccess: (data) => {
       queryClient.setQueryData(["posts", data.id], data);
@@ -74,6 +75,11 @@ const CreatePost = () => {
 
   return (
     <section className="flex justify-center mx-auto">
+      {createPostMutation.isError && (
+        <span className="text-red-600 mb-2">
+          {createPostMutation.error.response?.data?.message}
+        </span>
+      )}
       <form className="mt-16">
         <div className="flex flex-col gap-5">
           {/* <FormField

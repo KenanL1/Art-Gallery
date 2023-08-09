@@ -12,7 +12,7 @@ const Login = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const loginMutation = useMutation(authUser, {
+  const loginMutation = useMutation<any, any, any>(authUser, {
     onSuccess: (data) => {
       dispatch(login({ ...data }));
       navigate("/");
@@ -40,6 +40,11 @@ const Login = () => {
   return (
     <div className="flex flex-col justify-start items-center">
       <h1>Login</h1>
+      {loginMutation.isError && (
+        <span className="text-red-600 mb-2">
+          {loginMutation?.error?.response?.data?.msg}
+        </span>
+      )}
       <form className="w-full max-w-md" onSubmit={handleSubmit}>
         <div className="flex items-center gap-2 mb-2">
           <label>Username</label>
