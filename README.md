@@ -39,12 +39,14 @@ You can access the website by going to http://localhost:3000/
 
 - MERN (MongoDB/Mongoose, Express, React, Node)
 - Javascript/Typescript
-- Tailwind
-- Redux
+- Tailwind (CSS)
+- Redux (State Management)
+- React Query (Data-Fetching)
 - Vite
 - Passport (Authentication)
 - Docker (Container)
 - Selenium (End-to-end testing)
+- Github Actions (CI/CD)
 
 To build our application, we chose to use the **MERN stack**, which consists of **MongoDB, Express.js, React, and Node.js**. This allowed us to use a unified set of technologies (JS/TS) for both the frontend and backend, streamlining development and reducing the complexity of the application architecture. By building a **Single Page Application (SPA)**, we were able to take advantage of reusable components, which increased efficiency and reduced development time. SPAs load only once and dynamically update content through **client-side rendering**, paired with React's virtual DOM results in a faster and more responsive applicatitons that is both engaging and seamless.
 
@@ -55,6 +57,8 @@ As a **NoSQL database, MongoDB** stores data in flexible, JSON-like documents ra
 **Tailwind CSS** provides a set of pre-designed classes that can be utilized to style an application. This approach maintains a consistent naming convention, reduces the amount of CSS code to write, and simplifies the maintenance of the codebase. Additionally, it facilitates the creation of intricate responsive layouts, and enhances the speed of the development process.
 
 **Vite** uses an optimized build pipeline that leverages native ES modules, resulting in faster builds and smaller bundle sizes. Vite supports HMR Hot Module Replacement (HMR), which allows developers to update code changes in real-time without refreshing the page.
+
+**React Query** is a data-fetching library that extends the capabilities of the conventional 'fetch' call. It offers automated caching for fetched data, refetching of outdated data, error handling, as well as support for pagination and infinite scrolling scenarios
 
 ### State Management
 
@@ -69,6 +73,10 @@ Stateless authentication: JWT authentication is stateless, which means that the 
 Reduced server load: Because JWTs are self-contained, the server does not need to query a database or perform other expensive operations to authenticate each request. This reduces server load and improves performance.
 
 Improved security: JWTs are encrypted and signed, which makes them difficult to tamper with or forge. This helps to prevent unauthorized access and protects sensitive data.
+
+### Continuous Integration/ Continuous Development (CI/CD)
+
+**GitHub Actions** serves as a comprehensive continuous integration and continuous delivery (CI/CD) solution, enabling the automation of your build, testing, and deployment pipeline. It offers numerous advantages, including effortless integration with your GitHub repository, which facilitates automatic deployments upon any changes being pushed to the repository. This guarantees the continuous availability of the most recent application version. GitHub Actions also streamlines and automates the deployment procedure to Google Cloud Run, enhancing efficiency, ensuring consistency, and fostering collaboration within your development workflow
 
 ### Docker Container
 
