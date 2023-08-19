@@ -4,7 +4,7 @@ import { v2 as cloudinary } from "cloudinary";
 import Post, { IPost } from "../models/post.js";
 import Likes, { ILikes } from "../models/likes.js";
 import User, { IUser } from "../models/user.js";
-import { routeHandler } from "../utils/routeUils.js";
+import { routeHandler, paginatedResult } from "../utils/routeUils.js";
 
 dotenv.config();
 
@@ -19,7 +19,9 @@ cloudinary.config({
 // Return all posts
 router.route("/").get(async (req: Request, res: Response) => {
   await routeHandler(res, async () => {
-    const posts: IPost[] = await Post.find({});
+    const page = Number(req.query.page);
+    const posts: IPost[] = await paginatedResult(Post, {}, page);
+    // const posts: IPost[] = await Post.find({});
     res.status(200).json({ success: true, data: posts });
   });
 });
@@ -28,7 +30,13 @@ router.route("/").get(async (req: Request, res: Response) => {
 router.route("/userPost/:userId").get(async (req: Request, res: Response) => {
   await routeHandler(res, async () => {
     const { userId } = req.params;
-    const posts: IPost[] = await Post.find({ author: userId });
+    const page = Number(req.query.page);
+    const posts: IPost[] = await paginatedResult(
+      Post,
+      { author: userId },
+      page
+    );
+    // const posts: IPost[] = await Post.find({ author: userId });
     res.status(200).json({ success: true, data: posts });
   });
 });

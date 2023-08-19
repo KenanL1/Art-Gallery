@@ -3,15 +3,17 @@ import Likes from "../models/likes.js";
 import Post from "../models/post.js";
 import User from "../models/user.js";
 import mongoose, { Schema, Types } from "mongoose";
-import { routeHandler } from "../utils/routeUils.js";
+import { routeHandler, paginatedResult } from "../utils/routeUils.js";
 
 const router: Router = express.Router();
 
-// Get post liked by the user
+// Get posts liked by the user
 router.route("/:userId").get(async (req: Request, res: Response) => {
   await routeHandler(res, async () => {
     const { userId } = req.params;
-    const likes = await Likes.find({ user: userId }).populate("post");
+    const page = Number(req.query.page);
+    // const likes = await Likes.find({ user: userId }).populate("post");
+    const likes = await paginatedResult(Likes, { user: userId }, page, "post");
     res.status(200).json({ success: true, data: likes });
   });
 });

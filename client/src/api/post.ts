@@ -3,6 +3,12 @@ import { blobToBase64 } from "../utils";
 import { CardType } from "../components/Card";
 import axios from "axios";
 
+export interface PostResponse {
+  results: CardType[];
+  next: number | null;
+  prev: number | null;
+}
+
 // Generate AI art by calling API
 export const generateImage = async ({
   prompt,
@@ -56,16 +62,16 @@ export const createPost = async (body: CardType) => {
 };
 
 // Get all the posts
-export const getPosts = async () => {
+export const getPosts = async ({ pageParam = 1 }) => {
   const response = await axios.get(
-    `${import.meta.env.VITE_API_URL}/api/v1/post`,
+    `${import.meta.env.VITE_API_URL}/api/v1/post?page=${pageParam}`,
     {
       headers: {
         "Content-Type": "application/json",
       },
     }
   );
-  return response.data.data.reverse();
+  return response.data.data;
 };
 
 // Get a single post by id
@@ -82,10 +88,18 @@ export const getPost = async (postId: string) => {
   return response.data.data;
 };
 
-// Get post made from user
-export const getPostFromUser = async (user: string | undefined) => {
+// Get posts made from user
+export const getPostFromUser = async ({
+  user,
+  pageParam = 1,
+}: {
+  user: string | undefined;
+  pageParam?: number;
+}) => {
   const response = await axios(
-    `${import.meta.env.VITE_API_URL}/api/v1/post/userPost/${user}`,
+    `${
+      import.meta.env.VITE_API_URL
+    }/api/v1/post/userPost/${user}?page=${pageParam}`,
     {
       method: "GET",
       headers: {
@@ -93,13 +107,19 @@ export const getPostFromUser = async (user: string | undefined) => {
       },
     }
   );
-  return response.data.data.reverse();
+  return response.data.data;
 };
 
-// Get post that the user liked
-export const getLikedPosts = async (user: string | undefined) => {
+// Get posts that the user liked
+export const getLikedPosts = async ({
+  user,
+  pageParam = 1,
+}: {
+  user: string | undefined;
+  pageParam?: number;
+}) => {
   const response = await axios(
-    `${import.meta.env.VITE_API_URL}/api/v1/likes/${user}`,
+    `${import.meta.env.VITE_API_URL}/api/v1/likes/${user}?page=${pageParam}`,
     {
       method: "GET",
       headers: {
@@ -107,7 +127,7 @@ export const getLikedPosts = async (user: string | undefined) => {
       },
     }
   );
-  return response.data.data.reverse().map((p: any) => p.post);
+  return response.data.data;
 };
 
 // Delete a post

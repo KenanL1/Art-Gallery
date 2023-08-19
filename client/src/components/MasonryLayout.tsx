@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { InfiniteData } from "@tanstack/react-query";
 import Card from "./Card";
 import { CardType } from "./Card";
+import { PostResponse } from "../api/post";
 
 const MasonryLayout = ({
   data,
@@ -9,15 +11,6 @@ const MasonryLayout = ({
   data: CardType[] | undefined;
   title: string;
 }) => {
-  // function handleScroll() {
-  //   if (
-  //     window.innerHeight + document.documentElement.scrollTop ===
-  //     document.documentElement.offsetHeight
-  //   ) {
-  //     setPage((prevPage) => prevPage + 1);
-  //   }
-  // }
-
   // Calculate the number of columns based on the screen width
   const getColumnCount = (): number => {
     const screenWidth = window.innerWidth;

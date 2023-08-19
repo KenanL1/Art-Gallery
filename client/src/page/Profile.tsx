@@ -1,22 +1,23 @@
-import { useState, useEffect } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAppSelector } from "../store";
-// import { selectPost } from "../store/Reducers/postSlice";
-import { getPosts } from "../api/post";
-import { CardType } from "../components/Card";
+import { useState, useEffect, useCallback } from "react";
+import {
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   getFollowerCount,
   getFollowingCount,
   getLikesCount,
   getProfile,
 } from "../api/profile";
+import { Loader } from "../components";
 import { getPostFromUser, getLikedPosts } from "../api/post";
 import { useParams } from "react-router-dom";
 import MasonryLayout from "../components/MasonryLayout";
 
 const Profile = () => {
   const { user } = useParams();
-  const [sortBy, setSortBy] = useState<string>("oldest");
+  const [sortBy, setSortBy] = useState<string>("newest");
   const [postType, setPostType] = useState<number>(1);
   const [posts, setPosts] = useState<any>();
 
@@ -42,22 +43,37 @@ const Profile = () => {
     queryFn: () => getLikesCount(user),
   });
 
-  const userPost = useQuery({
+  const userPost = useInfiniteQuery({
     queryKey: ["userPost", user],
-    queryFn: () => getPostFromUser(user),
+    queryFn: () => getPostFromUser({ user }),
     onSuccess: (data) => {
-      setPosts(data);
+      setPosts(data.pages.flatMap((page) => page.results));
     },
   });
 
-  const likedPost = useQuery({
+  const likedPost = useInfiniteQuery({
     enabled: false,
     queryKey: ["likedPost", user],
-    queryFn: () => getLikedPosts(user),
+    queryFn: () => getLikedPosts({ user }),
     onSuccess: (data) => {
-      setPosts(data);
+      setPosts(
+        data.pages.flatMap((page) => page.results).map((p: any) => p.post)
+      );
     },
   });
+
+  // Infinite scrolling
+  const handleScroll = useCallback(() => {
+    if (
+      window.innerHeight + window.scrollY >=
+      document.body.offsetHeight - 100
+    ) {
+      const p = postType == 1 ? userPost : likedPost;
+      if (p.hasNextPage && !p.isFetchingNextPage) {
+        p.fetchNextPage();
+      }
+    }
+  }, [userPost.hasNextPage, likedPost.hasNextPage]);
 
   // Change posts type
   // 1 - User Post
@@ -69,15 +85,15 @@ const Profile = () => {
     // setPosts(type == 1 ? userPost.data : likedPost.data);
   };
 
-  // Sort post by newest
-  const sortByNewest = () => {
+  // Sort post by oldest first
+  const sortByOldest = () => {
     return posts.sort((x: any, y: any) => {
       return new Date(x.createdAt).getTime() - new Date(y.createdAt).getTime();
     });
   };
 
-  // Sort post by oldest
-  const sortByOldest = () => {
+  // Sort post by newest first
+  const sortByNewest = () => {
     return posts.sort((x: any, y: any) => {
       return new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime();
     });
@@ -107,8 +123,22 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    setPosts(postType == 1 ? userPost.data : likedPost.data);
+    setPosts(
+      postType == 1
+        ? userPost.data?.pages.flatMap((page) => page.results).reverse()
+        : likedPost.data?.pages
+            .flatMap((page) => page.results)
+            .reverse()
+            .map((p: any) => p.post)
+    );
   }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [handleScroll]); // Prevents stale closure values, ensures latest handleScroll is referenced
 
   return (
     <>
@@ -162,12 +192,14 @@ const Profile = () => {
           (postType == 2 && !likedPost.isLoading) ? (
             <MasonryLayout data={posts} title="No Post" />
           ) : (
-            <div>Loading...</div>
+            <Loader />
           )}
         </div>
       ) : (
-        <div>Loading...</div>
+        <Loader />
       )}
+      {userPost.isFetchingNextPage ||
+        (likedPost.isFetchingNextPage && <Loader />)}
     </>
   );
 };

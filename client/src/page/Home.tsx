@@ -1,24 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useCallback, useEffect, useState } from "react";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "../store";
 import { getPosts } from "../api/post";
-import { Card, FormField, Loader } from "../components";
+import { FormField, Loader } from "../components";
 import { CardType } from "../components/Card";
-// import {
-//   fetchPosts,
-//   selectLoading,
-//   selectPost,
-// } from "../store/Reducers/postSlice";
+import { PostResponse } from "../api/post";
 import MasonryLayout from "../components/MasonryLayout";
 
 const Home = () => {
-  // const allPosts = useAppSelector(selectPost);
-  // const loading = useAppSelector(selectLoading);
-  const {
-    data: allPosts,
-    isLoading,
-    isError,
-  } = useQuery<CardType[]>(["posts"], getPosts);
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery<PostResponse>(["posts"], getPosts, {
+      getNextPageParam: (lastPage) => lastPage.next,
+    });
 
   const [searchText, setSearchText] = useState<string>("");
   const [searchTimeout, setSearchTimeout] = useState<
@@ -27,10 +20,19 @@ const Home = () => {
   const [searchedResults, setSearchedResults] = useState<CardType[]>([]);
   const dispatch = useAppDispatch();
 
-  // // Get post on inital render
-  // useEffect(() => {
-  //   dispatch(fetchPosts());
-  // }, []);
+  // Infinite scrolling
+  // prevent a new function being created on each render.
+  // This allows the same callback instance to be referenced across renders when passed to add/removeEventListener.
+  const handleScroll = useCallback(() => {
+    if (
+      window.innerHeight + window.scrollY >=
+      document.body.offsetHeight - 100
+    ) {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    }
+  }, [hasNextPage]);
 
   // When search input changes
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,17 +41,26 @@ const Home = () => {
 
     setSearchTimeout(
       setTimeout(() => {
-        const searchResult = allPosts?.filter(
-          (item) =>
-            (item.name &&
-              item.name.toLowerCase().includes(searchText.toLowerCase())) ||
-            (item.prompt &&
-              item.prompt.toLowerCase().includes(searchText.toLowerCase()))
-        );
+        const searchResult = data?.pages
+          .flatMap((page) => page.results)
+          .filter(
+            (item) =>
+              (item.name &&
+                item.name.toLowerCase().includes(searchText.toLowerCase())) ||
+              (item.prompt &&
+                item.prompt.toLowerCase().includes(searchText.toLowerCase()))
+          );
         if (searchResult) setSearchedResults(searchResult);
       }, 500)
     );
   };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [handleScroll]); // Prevents stale closure values, ensures latest handleScroll is referenced
 
   return (
     <section className="mx-auto">
@@ -66,9 +77,7 @@ const Home = () => {
 
       <div className="mt-10">
         {isLoading ? (
-          <div className="flex justify-center items-center">
-            <Loader />
-          </div>
+          <Loader />
         ) : (
           <>
             {searchText && (
@@ -86,10 +95,14 @@ const Home = () => {
                 title="No Search Results Found"
               />
             ) : (
-              <MasonryLayout data={allPosts} title="No Posts Yet" />
+              <MasonryLayout
+                data={data?.pages.flatMap((page) => page.results)}
+                title="No Posts Yet"
+              />
             )}
           </>
         )}
+        {isFetchingNextPage && <Loader />}
       </div>
     </section>
   );

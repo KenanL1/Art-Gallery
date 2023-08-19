@@ -74,7 +74,7 @@ Reduced server load: Because JWTs are self-contained, the server does not need t
 
 Improved security: JWTs are encrypted and signed, which makes them difficult to tamper with or forge. This helps to prevent unauthorized access and protects sensitive data.
 
-### Continuous Integration/ Continuous Development (CI/CD)
+### Continuous Integration/ Continuous Delivery (CI/CD)
 
 **GitHub Actions** serves as a comprehensive continuous integration and continuous delivery (CI/CD) solution, enabling the automation of your build, testing, and deployment pipeline. It offers numerous advantages, including effortless integration with your GitHub repository, which facilitates automatic deployments upon any changes being pushed to the repository. This guarantees the continuous availability of the most recent application version. GitHub Actions also streamlines and automates the deployment procedure to Google Cloud Run, enhancing efficiency, ensuring consistency, and fostering collaboration within your development workflow
 
