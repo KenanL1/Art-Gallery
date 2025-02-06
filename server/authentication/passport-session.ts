@@ -26,6 +26,7 @@ const initialize = (passport) => {
   };
 
   // Use the local authentication stragety (session, cookies)
+  // configure Passport to use a specific authentication strategy
   passport.use(new LocalStrategy({ username: "email" }), authenticateUser);
 
   // adds session id(user information) to cookie

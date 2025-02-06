@@ -19,35 +19,56 @@ export const generateImage = async ({
 }) => {
   let url = "";
   let body = {};
-  if (model === AIModel.OpenAI) {
-    url = import.meta.env.VITE_API_URL + "/api/v1/dalle";
-    body = {
-      prompt: prompt,
-      // n: form.numImages,
-    };
-  } else {
-    url =
-      "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5";
-    body = {
-      inputs: prompt,
-      // guidance_scale: form.guidance_scale,
-      // steps: form.steps,
-      // seed: -1,
-    };
+  let img;
+  let response;
+  switch (model) {
+    case AIModel.OpenAI:
+      url = import.meta.env.VITE_API_URL + "/api/v1/dalle";
+      body = {
+        prompt: prompt,
+        // n: form.numImages,
+      };
+      break;
+    case AIModel.FLUX:
+      let width = 512;
+      let height = 512;
+      url = `https://image.pollinations.ai/prompt/${encodeURIComponent(
+        prompt
+      )}?width=${width}&height=${height}&model=flux`;
+      response = await axios.get(url, {
+        responseType: "blob",
+        maxRedirects: 5, // Allow redirects
+      });
+      break;
+    default:
+      url =
+        "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5";
+      body = {
+        inputs: prompt,
+        // guidance_scale: form.guidance_scale,
+        // steps: form.steps,
+        // seed: -1,
+      };
+      response = await axios.post(url, body, {
+        responseType: "blob",
+        headers: {
+          Authorization: import.meta.env.VITE_HUGGINGFACE_KEY,
+        },
+      });
   }
-  const response = await axios.post(url, body, {
-    responseType: "blob",
-    headers: {
-      Authorization: import.meta.env.VITE_HUGGINGFACE_KEY,
-    },
-  });
 
-  const data = response.data;
+  const data = response?.data;
 
-  const img =
-    model == AIModel.OpenAI
-      ? `data:image/jpeg;base64,${data.photo}`
-      : await blobToBase64(data);
+  switch (model) {
+    case AIModel.OpenAI:
+      img = `data:image/jpeg;base64,${data.photo}`;
+
+    // case AIModel.FLUX:
+    //   await response.buffer()
+    default:
+      img = await blobToBase64(data);
+  }
+
   return img;
 };
 

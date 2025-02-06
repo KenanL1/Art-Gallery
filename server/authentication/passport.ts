@@ -17,6 +17,7 @@ const options = {
 
 const initialize = (passport) => {
   // JWT payload is passed into the verify callback
+  // configure Passport to use a specific authentication strategy
   passport.use(
     new JwtStrategy(options, async (payload, done) => {
       try {

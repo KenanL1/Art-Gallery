@@ -17,9 +17,9 @@ function Upload() {
       queryClient.setQueryData(["posts", data.id], data);
       queryClient.invalidateQueries(["posts"], { exact: true });
     },
-    // onError: (err) => {
-    //   console.log(err);
-    // },
+    onError: (err) => {
+      console.log(err);
+    },
   });
 
   const handleFileInputChange = (
